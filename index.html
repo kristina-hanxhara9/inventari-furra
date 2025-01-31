@@ -125,6 +125,9 @@
                 <th>Turni 1</th>
                 <th>Turni 2</th>
                 <th>Totali Final</th>
+                <th>Gjithsej kostoTotale</th>
+                <th>Gjithsej Totali Final</th>
+                <th>Xhiro ditore</th>
                 <th>Veprimi</th>
             </tr>
         </thead>
@@ -252,99 +255,120 @@
 
         document.getElementById("dailyTotal").innerText = dailyTotal.toFixed(2);
     }
-
     function saveRecord() {
-        const record = {
-            date: new Date().toLocaleString(),
-            products: products.map((product, index) => ({
+    let sumTotalCost = 0;
+    let sumFinalTotal = 0;
+
+    // Calculate total cost and final total
+    const record = {
+        date: new Date().toLocaleString(),
+        products: products.map((product, index) => {
+            const quantity = parseFloat(document.getElementById(`quantity-${index}`).value) || 0;
+            const part1 = parseFloat(document.getElementById(`part1-${index}`).value) || 0;
+            const part2 = parseFloat(document.getElementById(`part2-${index}`).value) || 0;
+
+            const totalCost = quantity * product.price;
+            const finalTotal = totalCost - (part1 * product.price) - (part2 * product.price);
+
+            sumTotalCost += totalCost;  // Sum of all total costs
+            sumFinalTotal += finalTotal; // Sum of all final totals
+
+            return {
                 product: product.product,
                 price: product.price,
-                quantity: document.getElementById(`quantity-${index}`).value,
-                part1: document.getElementById(`part1-${index}`).value,
-                part2: document.getElementById(`part2-${index}`).value,
-                finalTotal: document.getElementById(`finalTotal-${index}`).innerText
-            })),
-            dailyTotal: document.getElementById("dailyTotal").innerText
-        };
+                quantity: quantity,
+                part1: part1,
+                part2: part2,
+                totalCost: totalCost.toFixed(2),
+                finalTotal: finalTotal.toFixed(2)
+            };
+        }),
+        sumTotalCost: sumTotalCost.toFixed(2), // Store sum of total costs
+        sumFinalTotal: sumFinalTotal.toFixed(2), // Store sum of final totals
+        sumOfAll: (sumTotalCost - sumFinalTotal).toFixed(2) // Store final sum
+    };
 
-        addRecordToTable(record);
-        saveToGoogleSheets(record);
-    }
+    addRecordToTable(record);
+    saveToGoogleSheets(record);
+}
 
-    function addRecordToTable(record) {
-        const recordTable = document.getElementById("recordTable");
-        const row = document.createElement("tr");
 
-        // Map data from record, showing zero for empty values
-        const products = record.products.map(p => p.product).join(", ") || "0";
-        const prices = record.products.map(p => p.price).join(", ") || "0";
-        const quantities = record.products.map(p => p.quantity).join(", ") || "0";
-        const totalCosts = record.products.map(p => p.finalTotal).join(", ") || "0";
-        const part1s = record.products.map(p => p.part1).join(", ") || "0";
-        const part2s = record.products.map(p => p.part2).join(", ") || "0";
-        const finalTotals = record.products.map(p => p.finalTotal).join(", ") || "0";
+function addRecordToTable(record) {
+    const recordTable = document.getElementById("recordTable");
+    const row = document.createElement("tr");
 
-        row.innerHTML = `
-            <td>${record.date}</td>
-            <td>${products}</td>
-            <td>${prices}</td>
-            <td>${quantities}</td>
-            <td>${record.dailyTotal}</td>
-            <td>${part1s}</td>
-            <td>${part2s}</td>
-            <td>${finalTotals}</td>
-            <td>
-                <button onclick="editRecord(this)">Edit</button>
-                <button onclick="deleteRecord(this)">Delete</button>
-            </td>
-        `;
-        recordTable.appendChild(row);
-    }
+    const products = record.products.map(p => p.product).join(", ") || "0";
+    const prices = record.products.map(p => p.price).join(", ") || "0";
+    const quantities = record.products.map(p => p.quantity).join(", ") || "0";
+    const totalCosts = record.products.map(p => p.totalCost).join(", ") || "0";
+    const part1s = record.products.map(p => p.part1).join(", ") || "0";
+    const part2s = record.products.map(p => p.part2).join(", ") || "0";
+    const finalTotals = record.products.map(p => p.finalTotal).join(", ") || "0";
 
-    function editRecord(button) {
-        const row = button.parentElement.parentElement;
-        const cells = row.getElementsByTagName("td");
+    row.innerHTML = `
+        <td>${record.date}</td>
+        <td>${products}</td>
+        <td>${prices}</td>
+        <td>${quantities}</td>
+        <td>${totalCosts}</td>
+        <td>${part1s}</td>
+        <td>${part2s}</td>
+        <td>${finalTotals}</td>
+        <td>${record.sumTotalCost}</td> <!-- Sum of Total Costs -->
+        <td>${record.sumFinalTotal}</td> <!-- Sum of Final Totals -->
+        <td>${record.sumOfAll}</td> <!-- Final Sum (TotalCost - FinalTotal) -->
+        <td>
+            <button onclick="editRecord(this)">Edit</button>
+            <button onclick="deleteRecord(this)">Delete</button>
+        </td>
+    `;
+    recordTable.appendChild(row);
+}
 
-        const quantities = cells[3].innerText.split(", ");
-        const part1s = cells[5].innerText.split(", ");
-        const part2s = cells[6].innerText.split(", ");
+function editRecord(button) {
+    const row = button.parentElement.parentElement;
+    const cells = row.getElementsByTagName("td");
 
-        // Reset all input fields
-        products.forEach((_, index) => {
-            document.getElementById(`quantity-${index}`).value = 0;
-            document.getElementById(`part1-${index}`).value = 0;
-            document.getElementById(`part2-${index}`).value = 0;
-        });
+    const quantities = cells[3].innerText.split(", ");
+    const part1s = cells[5].innerText.split(", ");
+    const part2s = cells[6].innerText.split(", ");
 
-        // Populate input fields with the record data
-        products.forEach((_, index) => {
-            document.getElementById(`quantity-${index}`).value = quantities[index] || 0;
-            document.getElementById(`part1-${index}`).value = part1s[index] || 0;
-            document.getElementById(`part2-${index}`).value = part2s[index] || 0;
-        });
+    // Reset all input fields
+    products.forEach((_, index) => {
+        document.getElementById(`quantity-${index}`).value = 0;
+        document.getElementById(`part1-${index}`).value = 0;
+        document.getElementById(`part2-${index}`).value = 0;
+    });
 
-        updateDailyTotal();
-    }
+    // Populate input fields with the record data
+    products.forEach((_, index) => {
+        document.getElementById(`quantity-${index}`).value = quantities[index] || 0;
+        document.getElementById(`part1-${index}`).value = part1s[index] || 0;
+        document.getElementById(`part2-${index}`).value = part2s[index] || 0;
+    });
 
-    function deleteRecord(button) {
-        button.parentElement.parentElement.remove();
-    }
+    updateDailyTotal();
+}
 
-    function saveToGoogleSheets(record) {
-        fetch("https://script.google.com/macros/s/AKfycbxmU2bFqNL-raEaE_w9PGqy1322izRhiiPo6pG8ZtNPjOV2ZOrl56dwNeztbhOqOqPt/exec", {
-            method: "POST",
-            mode: "no-cors",
-            body: JSON.stringify(record),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        .then(response => response.json())
-        .then(data => console.log("Saved:", data))
-        .catch(error => console.error("Error:", error));
-    }
+function deleteRecord(button) {
+    button.parentElement.parentElement.remove();
+}
 
-    document.addEventListener("DOMContentLoaded", renderProductTable);
+function saveToGoogleSheets(record) {
+    fetch("https://script.google.com/macros/s/AKfycbyswxH2GJvLF0R1Jat-qVS3JTGRx6dWqfZk2lafh7F86knNgntZc_ILKawTdbK0HllE/exec", {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify(record),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => response.json())
+    .then(data => console.log("Saved:", data))
+    .catch(error => console.error("Error:", error));
+}
+
+document.addEventListener("DOMContentLoaded", renderProductTable);
 </script>
 </body>
 </html>
