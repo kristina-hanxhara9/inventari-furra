@@ -433,14 +433,19 @@
     }
 
     async function loadRecords() {
-        const records = await loadRecordsFromDB();
-        const recordTable = document.getElementById("recordTable");
-        recordTable.innerHTML = ""; // Clear table before loading records
+    const records = await loadRecordsFromDB();
+    const recordTable = document.getElementById("recordTable");
+    recordTable.innerHTML = ""; // Clear the table before loading records
 
-        records.forEach(record => {
-            addRecordToTable(record);
-        });
+    if (records.length === 0) {
+        console.log("No records found in IndexedDB.");
     }
+
+    records.forEach(record => {
+        addRecordToTable(record);
+    });
+}
+
 
     function saveToGoogleSheets(record) {
         fetch("https://script.google.com/macros/s/AKfycbyswxH2GJvLF0R1Jat-qVS3JTGRx6dWqfZk2lafh7F86knNgntZc_ILKawTdbK0HllE/exec", {
@@ -456,11 +461,12 @@
         .catch(error => console.error("Error:", error));
     }
 
-document.addEventListener("DOMContentLoaded", async () => {
-    await openDB();
-    renderProductTable();
-    await loadRecords();
+    document.addEventListener("DOMContentLoaded", async () => {
+    await openDB();   // Ensure the database is open
+    renderProductTable(); // Render product input fields
+    await loadRecords();  // Load saved records
 });
+
 </script>
 </body>
 </html>
