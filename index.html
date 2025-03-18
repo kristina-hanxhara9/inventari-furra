@@ -4,687 +4,977 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventari</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 10px;
-            font-size: 16px;
+        :root {
+            --primary: #2c3e50;
+            --primary-light: #34495e;
+            --secondary: #3498db;
+            --secondary-light: #5dade2;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --white: #ffffff;
+            --gray: #95a5a6;
+            --gray-light: #bdc3c7;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
 
-        input, button {
-            margin: 5px 0;
-            padding: 10px;
-            width: 100%;
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
-            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 1.7rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary);
+            margin-top: 30px;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 15px 20px;
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        input, button, select {
+            font-family: inherit;
+            font-size: 1rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--gray-light);
+            padding: 10px 12px;
+            width: 100%;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+        }
+
+        input[type="number"] {
+            text-align: center;
+        }
+
+        button {
+            cursor: pointer;
+            background-color: var(--secondary);
+            color: var(--white);
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        button:hover {
+            background-color: var(--secondary-light);
+            transform: translateY(-2px);
+        }
+
+        button i {
+            margin-right: 8px;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+        }
+
+        .btn-warning:hover {
+            background-color: #d35400;
+        }
+
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 0.875rem;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            max-height: 450px;
+            overflow-y: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            background-color: var(--white);
         }
 
         th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
+            padding: 12px 15px;
             text-align: center;
-            font-size: 14px;
+            border-bottom: 1px solid var(--gray-light);
         }
 
         th {
-            background-color: #f4f4f4;
+            background-color: var(--primary);
+            color: var(--white);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
-        .scrollable {
-            max-height: 300px;
-            overflow-y: auto;
-            display: block;
+        tr:nth-child(even) {
+            background-color: rgba(236, 240, 241, 0.5);
         }
 
-        .error-message {
-            color: red;
-            font-weight: bold;
-            padding: 10px;
-            background-color: #ffe6e6;
-            border: 1px solid red;
-            margin: 10px 0;
+        tr:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
             display: none;
         }
 
-        .success-message {
-            color: green;
-            font-weight: bold;
-            padding: 10px;
-            background-color: #e6ffe6;
-            border: 1px solid green;
-            margin: 10px 0;
-            display: none;
+        .alert-success {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+            border: 1px solid #27ae60;
         }
 
-        @media (max-width: 600px) {
+        .alert-danger {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+            border: 1px solid #c0392b;
+        }
+
+        .total-section {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .total-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background-color: var(--success);
+            color: var(--white);
+        }
+
+        .badge-danger {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+
+        .summary-card {
+            background-color: var(--white);
+            border-left: 4px solid var(--secondary);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 15px;
+        }
+
+        .summary-title {
+            font-size: 0.875rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-light);
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 768px) {
             body {
-                margin: 5px;
-                font-size: 14px;
+                padding: 10px;
             }
 
-            h1, h2, h3 {
-                font-size: 1.5em;
-                margin: 10px 0;
+            .container {
+                padding: 15px;
             }
 
-            table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-                margin-bottom: 20px;
+            h1 {
+                font-size: 1.8rem;
             }
 
-            th, td {
-                padding: 8px;
-                font-size: 12px;
-                min-width: 120px;
-            }
-
-            input, button {
-                padding: 8px;
-                font-size: 14px;
-            }
-
-            .scrollable {
-                max-height: 200px;
-            }
-
-            button {
-                width: auto;
-                margin: 10px auto;
+            h2 {
+                font-size: 1.4rem;
             }
 
             h3 {
-                font-size: 1.2em;
+                font-size: 1.2rem;
+            }
+
+            .table-responsive {
+                max-height: 350px;
+            }
+
+            th, td {
+                padding: 10px;
+                font-size: 0.875rem;
+            }
+
+            input, button, select {
+                padding: 8px 10px;
+                font-size: 0.875rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-warehouse"></i> Inventari</h1>
+            <span id="current-date"></span>
+        </header>
 
-<h1>Inventari</h1>
+        <div id="errorMessage" class="alert alert-danger"></div>
+        <div id="successMessage" class="alert alert-success"></div>
 
-<div id="errorMessage" class="error-message"></div>
-<div id="successMessage" class="success-message"></div>
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-boxes"></i> Produktet
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Produktet</th>
+                                <th>Cmimi (per cope)</th>
+                                <th>Sasia</th>
+                                <th>Kostoja Totale</th>
+                                <th>Turni 1</th>
+                                <th>Turni 2</th>
+                                <th>Totali Final</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTable"></tbody>
+                    </table>
+                </div>
 
-<h2>Produktet</h2>
-<div class="scrollable">
-    <table>
-        <thead>
-            <tr>
-                <th>Produktet</th>
-                <th>Cmimi (per cope)</th>
-                <th>Sasia</th>
-                <th>Kostoja Totale</th>
-                <th>Turni 1</th>
-                <th>Turni 2</th>
-                <th>Totali Final</th>
-            </tr>
-        </thead>
-        <tbody id="productTable"></tbody>
-    </table>
-</div>
+                <div class="total-section">
+                    <h3 style="margin: 0; color: white;">Kostoja Totale Ditore</h3>
+                    <div class="total-value">L <span id="dailyTotal">0.00</span></div>
+                </div>
 
-<h3>Kostoja Totale Ditore: L <span id="dailyTotal">0.00</span></h3>
-<button onclick="saveRecord()">Ruaji të dhënat</button>
+                <button onclick="saveRecord()" class="btn-success">
+                    <i class="fas fa-save"></i> Ruaji të dhënat
+                </button>
+            </div>
+        </div>
 
-<h2>Lista e Ruajtur</h2>
-<div class="scrollable">
-    <table>
-        <thead>
-            <tr>
-                <th>Data</th>
-                <th>Produkte</th>
-                <th>Çmimet</th>
-                <th>Sasitë</th>
-                <th>Kostoja Totale</th>
-                <th>Turni 1</th>
-                <th>Turni 2</th>
-                <th>Totali Final</th>
-                <th>Gjithsej kostoTotale</th>
-                <th>Gjithsej Totali Final</th>
-                <th>Xhiro ditore</th>
-                <th>Veprimi</th>
-            </tr>
-        </thead>
-        <tbody id="recordTable"></tbody>
-    </table>
-</div>
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-history"></i> Lista e Ruajtur
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Produkte</th>
+                                <th>Çmimet</th>
+                                <th>Sasitë</th>
+                                <th>Kostoja Totale</th>
+                                <th>Turni 1</th>
+                                <th>Turni 2</th>
+                                <th>Totali Final</th>
+                                <th>Gjithsej kostoTotale</th>
+                                <th>Gjithsej Totali Final</th>
+                                <th>Xhiro ditore</th>
+                                <th>Veprimi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recordTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-<script>
-    const products = [
-        { product: "Ekmek", price: 1.5 },
-        { product: "Torte", price: 12.000 },
-        { product: "Zupa", price: 1.000 },
-        { product: "Trilece", price: 5.000 },
-        { product: "Kausha", price: 10.000 },
-        { product: "Peta", price: 1.000 },
-        { product: "Rulon", price: 10.000 },
-        { product: "Pastashu", price: 1.000 },
-        { product: "Kompeka", price: 10.000 },
-        { product: "Bakllava", price: 10.000 },
-        { product: "Torte racion", price: 1.5 },
-        { product: "Porcione", price: 12.000 },
-        { product: "Tolluma", price: 1.5 },
-        { product: "Buke franxholla", price: 12.000 },
-        { product: "Franxholla", price: 6.000 },
-        { product: "Buke me topa", price: 10.000 },
-        { product: "Buke masive", price: 1.5 },
-        { product: "Buke me fara", price: 12.000 },
-        { product: "Buke fshati", price: 10.000 },
-        { product: "Buke e rrumbullaket", price: 1.5 },
-        { product: "Buke e gjate", price: 12.000 },
-        { product: "Kulac", price: 6.000 },
-        { product: "Buke me ullinj", price: 12.000 },
-        { product: "Buke e verdhe", price: 6.000 },
-        { product: "Buke integrale", price: 10.000 },
-        { product: "Buke Bogeti", price: 1.5 },
-        { product: "Buke misri", price: 12.000 },
-        { product: "Buke thekre", price: 10.000 },
-        { product: "Pite", price: 1.5 },
-        { product: "Simite", price: 12.000 },
-        { product: "Sanduic", price: 6.000 },
-        { product: "Sanduic me fara", price: 12.000 },
-        { product: "Sanduic i verdhe", price: 6.000 },
-        { product: "Briosh", price: 10.000 },
-        { product: "Donat", price: 1.5 },
-        { product: "Byrek", price: 5.00 },
-        { product: "Pica", price: 1.5 },
-        { product: "Kos 380gr", price: 12.000 },
-        { product: "Kos bidon", price: 6.000 },
-        { product: "Kos i madh", price: 12.000 },
-        { product: "Kos 200", price: 6.000 },
-        { product: "Dhalle bidon", price: 10.000 },
-        { product: "Salce kosi 900gr", price: 10.000 },
-        { product: "Boze", price: 6.000 },
-        { product: "Uje Bukanik 7kg", price: 1.5 }
-    ];
+        <div class="footer">
+            <p>© <span id="current-year"></span> Inventari System</p>
+        </div>
+    </div>
 
-    let db;
-    
-    // Show error message
-    function showError(message) {
-        const errorElement = document.getElementById("errorMessage");
-        errorElement.textContent = message;
-        errorElement.style.display = "block";
-        setTimeout(() => {
-            errorElement.style.display = "none";
-        }, 5000);
-    }
-    
-    // Show success message
-    function showSuccess(message) {
-        const successElement = document.getElementById("successMessage");
-        successElement.textContent = message;
-        successElement.style.display = "block";
-        setTimeout(() => {
-            successElement.style.display = "none";
-        }, 3000);
-    }
+    <script>
+        const products = [
+            { product: "Ekmek", price: 1.5 },
+            { product: "Torte", price: 12.000 },
+            { product: "Zupa", price: 1.000 },
+            { product: "Trilece", price: 5.000 },
+            { product: "Kausha", price: 10.000 },
+            { product: "Peta", price: 1.000 },
+            { product: "Rulon", price: 10.000 },
+            { product: "Pastashu", price: 1.000 },
+            { product: "Kompeka", price: 10.000 },
+            { product: "Bakllava", price: 10.000 },
+            { product: "Torte racion", price: 1.5 },
+            { product: "Porcione", price: 12.000 },
+            { product: "Tolluma", price: 1.5 },
+            { product: "Buke franxholla", price: 12.000 },
+            { product: "Franxholla", price: 6.000 },
+            { product: "Buke me topa", price: 10.000 },
+            { product: "Buke masive", price: 1.5 },
+            { product: "Buke me fara", price: 12.000 },
+            { product: "Buke fshati", price: 10.000 },
+            { product: "Buke e rrumbullaket", price: 1.5 },
+            { product: "Buke e gjate", price: 12.000 },
+            { product: "Kulac", price: 6.000 },
+            { product: "Buke me ullinj", price: 12.000 },
+            { product: "Buke e verdhe", price: 6.000 },
+            { product: "Buke integrale", price: 10.000 },
+            { product: "Buke Bogeti", price: 1.5 },
+            { product: "Buke misri", price: 12.000 },
+            { product: "Buke thekre", price: 10.000 },
+            { product: "Pite", price: 1.5 },
+            { product: "Simite", price: 12.000 },
+            { product: "Sanduic", price: 6.000 },
+            { product: "Sanduic me fara", price: 12.000 },
+            { product: "Sanduic i verdhe", price: 6.000 },
+            { product: "Briosh", price: 10.000 },
+            { product: "Donat", price: 1.5 },
+            { product: "Byrek", price: 5.00 },
+            { product: "Pica", price: 1.5 },
+            { product: "Kos 380gr", price: 12.000 },
+            { product: "Kos bidon", price: 6.000 },
+            { product: "Kos i madh", price: 12.000 },
+            { product: "Kos 200", price: 6.000 },
+            { product: "Dhalle bidon", price: 10.000 },
+            { product: "Salce kosi 900gr", price: 10.000 },
+            { product: "Boze", price: 6.000 },
+            { product: "Uje Bukanik 7kg", price: 1.5 }
+        ];
 
-    function openDB() {
-        return new Promise((resolve, reject) => {
-            // Check if IndexedDB is supported
-            if (!window.indexedDB) {
-                showError("Your browser doesn't support IndexedDB. Please use a modern browser.");
-                reject("IndexedDB not supported");
-                return;
-            }
-            
-            const request = indexedDB.open("InventoryDB", 1);
+        let db;
+        
+        // Show error message
+        function showError(message) {
+            const errorElement = document.getElementById("errorMessage");
+            errorElement.textContent = message;
+            errorElement.style.display = "block";
+            setTimeout(() => {
+                errorElement.style.display = "none";
+            }, 5000);
+        }
+        
+        // Show success message
+        function showSuccess(message) {
+            const successElement = document.getElementById("successMessage");
+            successElement.textContent = message;
+            successElement.style.display = "block";
+            setTimeout(() => {
+                successElement.style.display = "none";
+            }, 3000);
+        }
 
-            request.onupgradeneeded = function(event) {
-                db = event.target.result;
-                if (!db.objectStoreNames.contains('records')) {
-                    db.createObjectStore('records', { keyPath: 'id', autoIncrement: true });
+        function openDB() {
+            return new Promise((resolve, reject) => {
+                // Check if IndexedDB is supported
+                if (!window.indexedDB) {
+                    showError("Your browser doesn't support IndexedDB. Please use a modern browser.");
+                    reject("IndexedDB not supported");
+                    return;
                 }
-            };
+                
+                const request = indexedDB.open("InventoryDB", 1);
 
-            request.onsuccess = function(event) {
-                db = event.target.result;
-                resolve(db);
-            };
-
-            request.onerror = function(event) {
-                showError("Error opening database: " + event.target.error);
-                reject("Error opening DB");
-            };
-        });
-    }
-
-    function saveRecordToDB(record) {
-        return new Promise((resolve, reject) => {
-            if (!db) {
-                showError("Database not initialized");
-                reject("Database not initialized");
-                return;
-            }
-            
-            try {
-                const transaction = db.transaction(['records'], 'readwrite');
-                const store = transaction.objectStore('records');
-                const request = store.add(record);
+                request.onupgradeneeded = function(event) {
+                    db = event.target.result;
+                    if (!db.objectStoreNames.contains('records')) {
+                        db.createObjectStore('records', { keyPath: 'id', autoIncrement: true });
+                    }
+                };
 
                 request.onsuccess = function(event) {
-                    resolve(event.target.result); // Return the new record ID
+                    db = event.target.result;
+                    resolve(db);
                 };
 
                 request.onerror = function(event) {
-                    showError("Error saving record: " + event.target.error);
-                    reject("Error saving record");
+                    showError("Error opening database: " + event.target.error);
+                    reject("Error opening DB");
                 };
-            } catch (error) {
-                showError("Error in transaction: " + error.message);
-                reject(error);
-            }
-        });
-    }
-
-    function loadRecordsFromDB() {
-        return new Promise((resolve, reject) => {
-            if (!db) {
-                showError("Database not initialized");
-                reject("Database not initialized");
-                return [];
-            }
-            
-            try {
-                const transaction = db.transaction(['records'], 'readonly');
-                const store = transaction.objectStore('records');
-                const request = store.getAll();
-
-                request.onsuccess = function(event) {
-                    resolve(event.target.result);
-                };
-
-                request.onerror = function(event) {
-                    showError("Error loading records: " + event.target.error);
-                    reject("Error loading records");
-                };
-            } catch (error) {
-                showError("Error in transaction: " + error.message);
-                reject(error);
-                return [];
-            }
-        });
-    }
-
-    function deleteRecordFromDB(id) {
-        return new Promise((resolve, reject) => {
-            if (!db) {
-                showError("Database not initialized");
-                reject("Database not initialized");
-                return;
-            }
-            
-            try {
-                const transaction = db.transaction(['records'], 'readwrite');
-                const store = transaction.objectStore('records');
-                const request = store.delete(Number(id));
-
-                request.onsuccess = function() {
-                    resolve();
-                };
-
-                request.onerror = function(event) {
-                    showError("Error deleting record: " + event.target.error);
-                    reject("Error deleting record");
-                };
-            } catch (error) {
-                showError("Error in transaction: " + error.message);
-                reject(error);
-            }
-        });
-    }
-
-    function renderProductTable() {
-        const productTable = document.getElementById("productTable");
-        productTable.innerHTML = "";
-
-        products.forEach((product, index) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${product.product}</td>
-                <td>${product.price.toFixed(2)}</td>
-                <td><input type="number" id="quantity-${index}" value="0" min="0" oninput="updateDailyTotal()"></td>
-                <td id="total-${index}">0.00</td>
-                <td><input type="number" id="part1-${index}" value="0" min="0" oninput="updateDailyTotal()"></td>
-                <td><input type="number" id="part2-${index}" value="0" min="0" oninput="updateDailyTotal()"></td>
-                <td id="finalTotal-${index}">0.00</td>
-            `;
-            productTable.appendChild(row);
-        });
-
-        for (let i = 0; i < 10; i++) {
-            const emptyRow = document.createElement("tr");
-            emptyRow.innerHTML = `
-                <td><input type="text" id="product-extra-${i}" placeholder="Product name"></td>
-                <td><input type="number" id="price-extra-${i}" placeholder="Price" step="0.01" min="0" oninput="updateDailyTotal()"></td>
-                <td><input type="number" id="quantity-extra-${i}" value="0" min="0" oninput="updateDailyTotal()"></td>
-                <td id="total-extra-${i}">0.00</td>
-                <td><input type="number" id="part1-extra-${i}" value="0" min="0" oninput="updateDailyTotal()"></td>
-                <td><input type="number" id="part2-extra-${i}" value="0" min="0" oninput="updateDailyTotal()"></td>
-                <td id="finalTotal-extra-${i}">0.00</td>
-            `;
-            productTable.appendChild(emptyRow);
-        }
-    }
-
-    function updateDailyTotal() {
-        let dailyTotal = 0;
-
-        // Calculate for predefined products
-        products.forEach((product, index) => {
-            const quantity = parseFloat(document.getElementById(`quantity-${index}`).value) || 0;
-            const part1 = parseFloat(document.getElementById(`part1-${index}`).value) || 0;
-            const part2 = parseFloat(document.getElementById(`part2-${index}`).value) || 0;
-
-            const totalCost = quantity * product.price;
-            const finalTotal = totalCost - (part1 * product.price) - (part2 * product.price);
-
-            document.getElementById(`total-${index}`).innerText = totalCost.toFixed(2);
-            document.getElementById(`finalTotal-${index}`).innerText = finalTotal.toFixed(2);
-
-            dailyTotal += finalTotal;
-        });
-
-        // Calculate for custom products
-        for (let i = 0; i < 10; i++) {
-            const productName = document.getElementById(`product-extra-${i}`).value.trim();
-            const price = parseFloat(document.getElementById(`price-extra-${i}`).value) || 0;
-            const quantity = parseFloat(document.getElementById(`quantity-extra-${i}`).value) || 0;
-            const part1 = parseFloat(document.getElementById(`part1-extra-${i}`).value) || 0;
-            const part2 = parseFloat(document.getElementById(`part2-extra-${i}`).value) || 0;
-
-            if (price > 0 && quantity > 0) {
-                const totalCost = price * quantity;
-                const finalTotal = totalCost - (part1 * price) - (part2 * price);
-
-                document.getElementById(`total-extra-${i}`).innerText = totalCost.toFixed(2);
-                document.getElementById(`finalTotal-extra-${i}`).innerText = finalTotal.toFixed(2);
-
-                dailyTotal += finalTotal;
-            } else {
-                document.getElementById(`total-extra-${i}`).innerText = "0.00";
-                document.getElementById(`finalTotal-extra-${i}`).innerText = "0.00";
-            }
+            });
         }
 
-        document.getElementById("dailyTotal").innerText = dailyTotal.toFixed(2);
-    }
+        function saveRecordToDB(record) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    showError("Database not initialized");
+                    reject("Database not initialized");
+                    return;
+                }
+                
+                try {
+                    const transaction = db.transaction(['records'], 'readwrite');
+                    const store = transaction.objectStore('records');
+                    const request = store.add(record);
 
-    async function saveRecord() {
-        try {
-            let sumTotalCost = 0;
-            let sumFinalTotal = 0;
-            let allProducts = [];
+                    request.onsuccess = function(event) {
+                        resolve(event.target.result); // Return the new record ID
+                    };
 
-            // Process predefined products
-            products.forEach((product, index) => {
-                const quantity = parseFloat(document.getElementById(`quantity-${index}`).value) || 0;
-                if (quantity > 0) {
-                    const part1 = parseFloat(document.getElementById(`part1-${index}`).value) || 0;
-                    const part2 = parseFloat(document.getElementById(`part2-${index}`).value) || 0;
-
-                    const totalCost = quantity * product.price;
-                    const finalTotal = totalCost - (part1 * product.price) - (part2 * product.price);
-
-                    sumTotalCost += totalCost;
-                    sumFinalTotal += finalTotal;
-
-                    allProducts.push({
-                        product: product.product,
-                        price: product.price,
-                        quantity: quantity,
-                        part1: part1,
-                        part2: part2,
-                        totalCost: totalCost.toFixed(2),
-                        finalTotal: finalTotal.toFixed(2)
-                    });
+                    request.onerror = function(event) {
+                        showError("Error saving record: " + event.target.error);
+                        reject("Error saving record");
+                    };
+                } catch (error) {
+                    showError("Error in transaction: " + error.message);
+                    reject(error);
                 }
             });
+        }
 
-            // Process custom products
+        function loadRecordsFromDB() {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    showError("Database not initialized");
+                    reject("Database not initialized");
+                    return [];
+                }
+                
+                try {
+                    const transaction = db.transaction(['records'], 'readonly');
+                    const store = transaction.objectStore('records');
+                    const request = store.getAll();
+
+                    request.onsuccess = function(event) {
+                        resolve(event.target.result);
+                    };
+
+                    request.onerror = function(event) {
+                        showError("Error loading records: " + event.target.error);
+                        reject("Error loading records");
+                    };
+                } catch (error) {
+                    showError("Error in transaction: " + error.message);
+                    reject(error);
+                    return [];
+                }
+            });
+        }
+
+        function deleteRecordFromDB(id) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    showError("Database not initialized");
+                    reject("Database not initialized");
+                    return;
+                }
+                
+                try {
+                    const transaction = db.transaction(['records'], 'readwrite');
+                    const store = transaction.objectStore('records');
+                    const request = store.delete(Number(id));
+
+                    request.onsuccess = function() {
+                        resolve();
+                    };
+
+                    request.onerror = function(event) {
+                        showError("Error deleting record: " + event.target.error);
+                        reject("Error deleting record");
+                    };
+                } catch (error) {
+                    showError("Error in transaction: " + error.message);
+                    reject(error);
+                }
+            });
+        }
+
+        function renderProductTable() {
+            const productTable = document.getElementById("productTable");
+            productTable.innerHTML = "";
+
+            products.forEach((product, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${product.product}</td>
+                    <td>${product.price.toFixed(2)}</td>
+                    <td><input type="number" id="quantity-${index}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                    <td id="total-${index}">0.00</td>
+                    <td><input type="number" id="part1-${index}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                    <td><input type="number" id="part2-${index}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                    <td id="finalTotal-${index}">0.00</td>
+                `;
+                productTable.appendChild(row);
+            });
+
+            for (let i = 0; i < 10; i++) {
+                const emptyRow = document.createElement("tr");
+                emptyRow.innerHTML = `
+                    <td><input type="text" id="product-extra-${i}" placeholder="Product name"></td>
+                    <td><input type="number" id="price-extra-${i}" placeholder="Price" step="0.01" min="0" oninput="updateDailyTotal()"></td>
+                    <td><input type="number" id="quantity-extra-${i}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                    <td id="total-extra-${i}">0.00</td>
+                    <td><input type="number" id="part1-extra-${i}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                    <td><input type="number" id="part2-extra-${i}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                    <td id="finalTotal-extra-${i}">0.00</td>
+                `;
+                productTable.appendChild(emptyRow);
+            }
+        }
+
+        function updateDailyTotal() {
+            let dailyTotal = 0;
+
+            // Calculate for predefined products
+            products.forEach((product, index) => {
+                const quantity = parseFloat(document.getElementById(`quantity-${index}`).value) || 0;
+                const part1 = parseFloat(document.getElementById(`part1-${index}`).value) || 0;
+                const part2 = parseFloat(document.getElementById(`part2-${index}`).value) || 0;
+
+                const totalCost = quantity * product.price;
+                const finalTotal = totalCost - (part1 * product.price) - (part2 * product.price);
+
+                document.getElementById(`total-${index}`).innerText = totalCost.toFixed(2);
+                document.getElementById(`finalTotal-${index}`).innerText = finalTotal.toFixed(2);
+
+                dailyTotal += finalTotal;
+            });
+
+            // Calculate for custom products
             for (let i = 0; i < 10; i++) {
                 const productName = document.getElementById(`product-extra-${i}`).value.trim();
                 const price = parseFloat(document.getElementById(`price-extra-${i}`).value) || 0;
                 const quantity = parseFloat(document.getElementById(`quantity-extra-${i}`).value) || 0;
-                
-                if (productName && price > 0 && quantity > 0) {
-                    const part1 = parseFloat(document.getElementById(`part1-extra-${i}`).value) || 0;
-                    const part2 = parseFloat(document.getElementById(`part2-extra-${i}`).value) || 0;
+                const part1 = parseFloat(document.getElementById(`part1-extra-${i}`).value) || 0;
+                const part2 = parseFloat(document.getElementById(`part2-extra-${i}`).value) || 0;
 
+                if (price > 0 && quantity > 0) {
                     const totalCost = price * quantity;
                     const finalTotal = totalCost - (part1 * price) - (part2 * price);
 
-                    sumTotalCost += totalCost;
-                    sumFinalTotal += finalTotal;
+                    document.getElementById(`total-extra-${i}`).innerText = totalCost.toFixed(2);
+                    document.getElementById(`finalTotal-extra-${i}`).innerText = finalTotal.toFixed(2);
 
-                    allProducts.push({
-                        product: productName,
-                        price: price,
-                        quantity: quantity,
-                        part1: part1,
-                        part2: part2,
-                        totalCost: totalCost.toFixed(2),
-                        finalTotal: finalTotal.toFixed(2)
-                    });
+                    dailyTotal += finalTotal;
+                } else {
+                    document.getElementById(`total-extra-${i}`).innerText = "0.00";
+                    document.getElementById(`finalTotal-extra-${i}`).innerText = "0.00";
                 }
             }
 
-            // Check if there are products to save
-            if (allProducts.length === 0) {
-                showError("No products to save. Please add quantities.");
-                return;
-            }
+            document.getElementById("dailyTotal").innerText = dailyTotal.toFixed(2);
+        }
 
-            const record = {
-                date: new Date().toLocaleString(),
-                products: allProducts,
-                sumTotalCost: sumTotalCost.toFixed(2),
-                sumFinalTotal: sumFinalTotal.toFixed(2),
-                sumOfAll: (sumTotalCost - sumFinalTotal).toFixed(2)
-            };
-
-            const recordID = await saveRecordToDB(record);
-            record.id = recordID;
-            addRecordToTable(record);
-            
-            // Try to save to Google Sheets, but don't block the local save if it fails
+        async function saveRecord() {
             try {
-                await saveToGoogleSheets(record);
-                showSuccess("Record saved successfully locally and to Google Sheets!");
-            } catch (error) {
-                console.error("Google Sheets error:", error);
-                showSuccess("Record saved locally, but Google Sheets sync failed.");
-            }
+                let sumTotalCost = 0;
+                let sumFinalTotal = 0;
+                let allProducts = [];
 
-            // Reset the table to default empty state
-            renderProductTable();
-            document.getElementById("dailyTotal").innerText = "0.00";
-        } catch (error) {
-            console.error("Save error:", error);
-            showError("Error saving record: " + error.message);
-        }
-    }
+                // Process predefined products
+                products.forEach((product, index) => {
+                    const quantity = parseFloat(document.getElementById(`quantity-${index}`).value) || 0;
+                    if (quantity > 0) {
+                        const part1 = parseFloat(document.getElementById(`part1-${index}`).value) || 0;
+                        const part2 = parseFloat(document.getElementById(`part2-${index}`).value) || 0;
 
-    function addRecordToTable(record) {
-        const recordTable = document.getElementById("recordTable");
-        const row = document.createElement("tr");
-        row.setAttribute("data-id", record.id);
+                        const totalCost = quantity * product.price;
+                        const finalTotal = totalCost - (part1 * product.price) - (part2 * product.price);
 
-        // Limit display length for readability
-        const displayProductNames = record.products.map(p => p.product).join(", ");
-        const productText = displayProductNames.length > 50 
-            ? displayProductNames.substring(0, 50) + "..." 
-            : displayProductNames;
+                        sumTotalCost += totalCost;
+                        sumFinalTotal += finalTotal;
 
-        row.innerHTML = `
-            <td>${record.date}</td>
-            <td title="${displayProductNames}">${productText}</td>
-            <td>${record.products.map(p => p.price).join(", ")}</td>
-            <td>${record.products.map(p => p.quantity).join(", ")}</td>
-            <td>${record.products.map(p => p.totalCost).join(", ")}</td>
-            <td>${record.products.map(p => p.part1).join(", ")}</td>
-            <td>${record.products.map(p => p.part2).join(", ")}</td>
-            <td>${record.products.map(p => p.finalTotal).join(", ")}</td>
-            <td>${record.sumTotalCost}</td>
-            <td>${record.sumFinalTotal}</td>
-            <td>${record.sumOfAll}</td>
-            <td>
-                <button onclick="editRecord(this)">Edit</button>
-                <button onclick="deleteRecord(this)">Delete</button>
-            </td>
-        `;
-        recordTable.prepend(row); // Add most recent records at the top
-    }
+                        allProducts.push({
+                            product: product.product,
+                            price: product.price,
+                            quantity: quantity,
+                            part1: part1,
+                            part2: part2,
+                            totalCost: totalCost.toFixed(2),
+                            finalTotal: finalTotal.toFixed(2)
+                        });
+                    }
+                });
 
-    function editRecord(button) {
-        try {
-            const row = button.parentElement.parentElement;
-            const id = row.getAttribute("data-id");
-            
-            if (!id) {
-                showError("Record ID not found.");
-                return;
-            }
-            
-            // Clear current inputs
-            renderProductTable();
-            
-            // Get data from the row
-            const cells = row.getElementsByTagName("td");
-            
-            const products = cells[1].getAttribute("title").split(", ");
-            const prices = cells[2].innerText.split(", ").map(p => parseFloat(p) || 0);
-            const quantities = cells[3].innerText.split(", ").map(q => parseFloat(q) || 0);
-            const part1s = cells[5].innerText.split(", ").map(p => parseFloat(p) || 0);
-            const part2s = cells[6].innerText.split(", ").map(p => parseFloat(p) || 0);
-            
-            // First, populate standard products
-            let extraProductIndex = 0;
-            
-            for (let i = 0; i < products.length; i++) {
-                const productName = products[i];
-                const productIndex = this.products.findIndex(p => p.product === productName);
-                
-                if (productIndex !== -1) {
-                    // This is a standard product
-                    document.getElementById(`quantity-${productIndex}`).value = quantities[i] || 0;
-                    document.getElementById(`part1-${productIndex}`).value = part1s[i] || 0;
-                    document.getElementById(`part2-${productIndex}`).value = part2s[i] || 0;
-                } else if (extraProductIndex < 10) {
-                    // This is a custom product
-                    document.getElementById(`product-extra-${extraProductIndex}`).value = productName;
-                    document.getElementById(`price-extra-${extraProductIndex}`).value = prices[i] || 0;
-                    document.getElementById(`quantity-extra-${extraProductIndex}`).value = quantities[i] || 0;
-                    document.getElementById(`part1-extra-${extraProductIndex}`).value = part1s[i] || 0;
-                    document.getElementById(`part2-extra-${extraProductIndex}`).value = part2s[i] || 0;
-                    extraProductIndex++;
+                // Process custom products
+                for (let i = 0; i < 10; i++) {
+                    const productName = document.getElementById(`product-extra-${i}`).value.trim();
+                    const price = parseFloat(document.getElementById(`price-extra-${i}`).value) || 0;
+                    const quantity = parseFloat(document.getElementById(`quantity-extra-${i}`).value) || 0;
+                    
+                    if (productName && price > 0 && quantity > 0) {
+                        const part1 = parseFloat(document.getElementById(`part1-extra-${i}`).value) || 0;
+                        const part2 = parseFloat(document.getElementById(`part2-extra-${i}`).value) || 0;
+
+                        const totalCost = price * quantity;
+                        const finalTotal = totalCost - (part1 * price) - (part2 * price);
+
+                        sumTotalCost += totalCost;
+                        sumFinalTotal += finalTotal;
+
+                        allProducts.push({
+                            product: productName,
+                            price: price,
+                            quantity: quantity,
+                            part1: part1,
+                            part2: part2,
+                            totalCost: totalCost.toFixed(2),
+                            finalTotal: finalTotal.toFixed(2)
+                        });
+                    }
                 }
-            }
-            
-            // Update calculations
-            updateDailyTotal();
-            
-            // Store record ID to later update it instead of creating a new one
-            document.body.setAttribute("data-editing-id", id);
-            
-        } catch (error) {
-            console.error("Edit error:", error);
-            showError("Error editing record: " + error.message);
-        }
-    }
 
-    async function deleteRecord(button) {
-        try {
-            const row = button.closest("tr");
-            const id = row.getAttribute("data-id"); 
-            
-            if (!id) {
-                showError("Record ID not found.");
-                return;
-            }
+                // Check if there are products to save
+                if (allProducts.length === 0) {
+                    showError("No products to save. Please add quantities.");
+                    return;
+                }
 
-            // Ask for confirmation
-            if (!confirm("Are you sure you want to delete this record?")) {
-                return;
-            }
+                const record = {
+                    date: new Date().toLocaleString(),
+                    products: allProducts,
+                    sumTotalCost: sumTotalCost.toFixed(2),
+                    sumFinalTotal: sumFinalTotal.toFixed(2),
+                    sumOfAll: (sumTotalCost - sumFinalTotal).toFixed(2)
+                };
 
-            await deleteRecordFromDB(id);
-            row.remove(); // Remove the row from the UI
-            showSuccess("Record deleted successfully");
-        } catch (error) {
-            console.error("Delete error:", error);
-            showError("Error deleting record: " + error.message);
-        }
-    }
-
-    async function loadRecords() {
-        try {
-            const records = await loadRecordsFromDB();
-            const recordTable = document.getElementById("recordTable");
-            recordTable.innerHTML = ""; // Clear the table before loading records
-
-            if (records.length === 0) {
-                console.log("No records found in IndexedDB.");
-            }
-
-            // Sort records by date (newest first)
-            records.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            records.forEach(record => {
+                const recordID = await saveRecordToDB(record);
+                record.id = recordID;
                 addRecordToTable(record);
-            });
-        } catch (error) {
-            console.error("Load records error:", error);
-            showError("Error loading records: " + error.message);
-        }
-    }
-
-    function saveToGoogleSheets(record) {
-        return new Promise((resolve, reject) => {
-            fetch("https://script.google.com/macros/s/AKfycbyswxH2GJvLF0R1Jat-qVS3JTGRx6dWqfZk2lafh7F86knNgntZc_ILKawTdbK0HllE/exec", {
-                method: "POST",
-                mode: "no-cors",
-                body: JSON.stringify(record),
-                headers: {
-                    "Content-Type": "application/json"
+                
+                // Try to save to Google Sheets, but don't block the local save if it fails
+                try {
+                    await saveToGoogleSheets(record);
+                    showSuccess("Record saved successfully locally and to Google Sheets!");
+                } catch (error) {
+                    console.error("Google Sheets error:", error);
+                    showSuccess("Record saved locally, but Google Sheets sync failed.");
                 }
-            })
-            .then(response => {
-                // With no-cors, we can't read the response
-                // Just assume it worked if no error was thrown
-                resolve("Success");
-            })
-            .catch(error => {
-                console.error("Google Sheets Error:", error);
-                reject(error);
-            });
-        });
-    }
 
-    // Initialize the application
-    document.addEventListener("DOMContentLoaded", async () => {
-        try {
-            await openDB();   // Ensure the database is open
-            renderProductTable(); // Render product input fields
-            await loadRecords();  // Load saved records
-            showSuccess("Application loaded successfully");
-        } catch (error) {
-            console.error("Initialization error:", error);
-            showError("Failed to initialize the application: " + error.message);
+                // Reset the table to default empty state
+                renderProductTable();
+                document.getElementById("dailyTotal").innerText = "0.00";
+            } catch (error) {
+                console.error("Save error:", error);
+                showError("Error saving record: " + error.message);
+            }
         }
-    });
-</script>
-</body>
-</html>
-</script>
+
+        function addRecordToTable(record) {
+            const recordTable = document.getElementById("recordTable");
+            const row = document.createElement("tr");
+            row.setAttribute("data-id", record.id);
+
+            // Limit display length for readability
+            const displayProductNames = record.products.map(p => p.product).join(", ");
+            const productText = displayProductNames.length > 50 
+                ? displayProductNames.substring(0, 50) + "..." 
+                : displayProductNames;
+
+            row.innerHTML = `
+                <td>${record.date}</td>
+                <td title="${displayProductNames}">${productText}</td>
+                <td>${record.products.map(p => p.price).join(", ")}</td>
+                <td>${record.products.map(p => p.quantity).join(", ")}</td>
+                <td>${record.products.map(p => p.totalCost).join(", ")}</td>
+                <td>${record.products.map(p => p.part1).join(", ")}</td>
+                <td>${record.products.map(p => p.part2).join(", ")}</td>
+                <td>${record.products.map(p => p.finalTotal).join(", ")}</td>
+                <td>${record.sumTotalCost}</td>
+                <td>${record.sumFinalTotal}</td>
+                <td>${record.sumOfAll}</td>
+                <td class="table-actions">
+                    <button onclick="editRecord(this)" class="btn-warning btn-sm">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="deleteRecord(this)" class="btn-danger btn-sm">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            recordTable.prepend(row); // Add most recent records at the top
+        }
+
+        function editRecord(button) {
+            try {
+                const row = button.parentElement.parentElement;
+                const id = row.getAttribute("data-id");
+                
+                if (!id) {
+                    showError("Record ID not found.");
+                    return;
+                }
+                
+                // Clear current inputs
+                renderProductTable();
+                
+                // Get data from the row
+                const cells = row.getElementsByTagName("td");
+                
+                const products = cells[1].getAttribute("title").split(", ");
+                const prices = cells[2].innerText.split(", ").map(p => parseFloat(p) || 0);
+                const quantities = cells[3].innerText.split(", ").map(q => parseFloat(q) || 0);
+                const part1s = cells[5].innerText.split(", ").map(p => parseFloat(p) || 0);
+                const part2s = cells[6].innerText.split(", ").map(p => parseFloat(p) || 0);
+                
+                // First, populate standard products
+                let extraProductIndex = 0;
+                
+                for (let i = 0; i < products.length; i++) {
+                    const productName = products[i];
+                    const productIndex = this.products.findIndex(p => p.product === productName);
+                    
+                    if (productIndex !== -1) {
+                        // This is a standard product
+                        document.getElementById(`quantity-${productIndex}`).value = quantities[i] || 0;
+                        document.getElementById(`part1-${productIndex}`).value = part1s[i] || 0;
+                        document.getElementById(`part2-${productIndex}`).value = part2s[i] || 0;
+                    } else if (extraProductIndex < 10) {
+                        // This is a custom product
+                        document.getElementById(`product-extra-${extraProductIndex}`).value = productName;
+                        document.getElementById(`price-extra-${extraProductIndex}`).value = prices[i] || 0;
+                        document.getElementById(`quantity-extra-${extraProductIndex}`).value = quantities[i] || 0;
+                        document.getElementById(`part1-extra-${extraProductIndex}`).value = part1s[i] || 0;
+                        document.getElementById(`part2-extra-${extraProductIndex}`).value = part2s[i] || 0;
+                        extraProductIndex++;
+                    }
+                }
+                
+                // Update calculations
+                updateDailyTotal();
+                
+                // Store record ID to later update it instead of creating a new one
+                document.body.setAttribute("data-editing-id", id);
+                
+                showSuccess("Record loaded for editing");
+            } catch (error) {
+                console.error("Edit error:", error);
+                showError("Error editing record: " + error.message);
+            }
+        }
+
+        async function deleteRecord(button) {
+            try {
+                const row = button.closest("tr");
+                const id = row.getAttribute("data-id"); 
+                
+                if (!id) {
+                    showError("Record ID not found.");
+                    return;
+                }
+
+                // Ask for confirmation
+                if (!confirm("Are you sure you want to delete this record?")) {
+                    return;
+                }
+
+                await deleteRecordFromDB(id);
+                row.remove(); // Remove the row from the UI
+                showSuccess("Record deleted successfully");
+            } catch (error) {
+                console.error("Delete error:", error);
+                showError("Error deleting record: " + error.message);
+            }
+        }
+
+        async function loadRecords() {
+            try {
+                const records = await loadRecordsFromDB();
+                const recordTable = document.getElementById("recordTable");
+                recordTable.innerHTML = ""; // Clear the table before loading records
+
+                if (records.length === 0) {
+                    console.log("No records found in IndexedDB.");
+                }
+
+                // Sort records by date (newest first)
+                records.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                records.forEach(record => {
+                    addRecordToTable(record);
+                });
+            } catch (error) {
+                console.error("Load records error:", error);
+                showError("Error loading records: " + error.message);
+            }
+        }
+
+        function saveToGoogleSheets(record) {
+            return new Promise((resolve, reject) => {
+                fetch("https://script.google.com/macros/s/AKfycbyswxH2GJvLF0R1Jat-qVS3JTGRx6dWqfZk2lafh7F86knNgntZc_ILKawTdbK0HllE/exec", {
+                    method: "POST",
+                    mode: "no-cors",
+                    body: JSON.stringify(record),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(response => {
+                    // With no-cors, we can't read the response
+                    // Just assume it worked if no error was thrown
+                    resolve("Success");
+                })
+                .catch(error => {
+                    console.error("Google Sheets Error:", error);
+                    reject(error);
+                });
+            });
+        }
+
+        // Update current date and year in UI
+        function updateDateTime() {
+            const now = new Date();
+            
+            // Update current date in header
+            document.getElementById("current-date").textContent = now.toLocaleDateString(undefined, {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            // Update year in footer
+            document.getElementById("current-year").textContent = now.getFullYear();
+        }
+
+        // Initialize the application
+        document.addEventListener("DOMContentLoaded", async () => {
+            try {
+                updateDateTime(); // Set date and time in UI
+                await openDB();   // Ensure the database is open
+                renderProductTable(); // Render product input fields
+                await loadRecords();  // Load saved records
+                showSuccess("Application loaded successfully");
+            } catch (error) {
+                console.error("Initialization error:", error);
+                showError("Failed to initialize the application: " + error.message);
+            }
+        });
+    </script>
 </body>
 </html>
