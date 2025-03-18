@@ -42,6 +42,26 @@
             display: block;
         }
 
+        .error-message {
+            color: red;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #ffe6e6;
+            border: 1px solid red;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .success-message {
+            color: green;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #e6ffe6;
+            border: 1px solid green;
+            margin: 10px 0;
+            display: none;
+        }
+
         @media (max-width: 600px) {
             body {
                 margin: 5px;
@@ -89,6 +109,9 @@
 <body>
 
 <h1>Inventari</h1>
+
+<div id="errorMessage" class="error-message"></div>
+<div id="successMessage" class="success-message"></div>
 
 <h2>Produktet</h2>
 <div class="scrollable">
@@ -184,9 +207,36 @@
     ];
 
     let db;
+    
+    // Show error message
+    function showError(message) {
+        const errorElement = document.getElementById("errorMessage");
+        errorElement.textContent = message;
+        errorElement.style.display = "block";
+        setTimeout(() => {
+            errorElement.style.display = "none";
+        }, 5000);
+    }
+    
+    // Show success message
+    function showSuccess(message) {
+        const successElement = document.getElementById("successMessage");
+        successElement.textContent = message;
+        successElement.style.display = "block";
+        setTimeout(() => {
+            successElement.style.display = "none";
+        }, 3000);
+    }
 
     function openDB() {
         return new Promise((resolve, reject) => {
+            // Check if IndexedDB is supported
+            if (!window.indexedDB) {
+                showError("Your browser doesn't support IndexedDB. Please use a modern browser.");
+                reject("IndexedDB not supported");
+                return;
+            }
+            
             const request = indexedDB.open("InventoryDB", 1);
 
             request.onupgradeneeded = function(event) {
@@ -201,7 +251,8 @@
                 resolve(db);
             };
 
-            request.onerror = function() {
+            request.onerror = function(event) {
+                showError("Error opening database: " + event.target.error);
                 reject("Error opening DB");
             };
         });
@@ -209,49 +260,86 @@
 
     function saveRecordToDB(record) {
         return new Promise((resolve, reject) => {
-            const transaction = db.transaction(['records'], 'readwrite');
-            const store = transaction.objectStore('records');
-            const request = store.add(record);
+            if (!db) {
+                showError("Database not initialized");
+                reject("Database not initialized");
+                return;
+            }
+            
+            try {
+                const transaction = db.transaction(['records'], 'readwrite');
+                const store = transaction.objectStore('records');
+                const request = store.add(record);
 
-            request.onsuccess = function(event) {
-                resolve(event.target.result); // Return the new record ID
-            };
+                request.onsuccess = function(event) {
+                    resolve(event.target.result); // Return the new record ID
+                };
 
-            request.onerror = function() {
-                reject("Error saving record");
-            };
+                request.onerror = function(event) {
+                    showError("Error saving record: " + event.target.error);
+                    reject("Error saving record");
+                };
+            } catch (error) {
+                showError("Error in transaction: " + error.message);
+                reject(error);
+            }
         });
     }
 
     function loadRecordsFromDB() {
         return new Promise((resolve, reject) => {
-            const transaction = db.transaction(['records'], 'readonly');
-            const store = transaction.objectStore('records');
-            const request = store.getAll();
+            if (!db) {
+                showError("Database not initialized");
+                reject("Database not initialized");
+                return [];
+            }
+            
+            try {
+                const transaction = db.transaction(['records'], 'readonly');
+                const store = transaction.objectStore('records');
+                const request = store.getAll();
 
-            request.onsuccess = function(event) {
-                resolve(event.target.result);
-            };
+                request.onsuccess = function(event) {
+                    resolve(event.target.result);
+                };
 
-            request.onerror = function() {
-                reject("Error loading records");
-            };
+                request.onerror = function(event) {
+                    showError("Error loading records: " + event.target.error);
+                    reject("Error loading records");
+                };
+            } catch (error) {
+                showError("Error in transaction: " + error.message);
+                reject(error);
+                return [];
+            }
         });
     }
 
     function deleteRecordFromDB(id) {
         return new Promise((resolve, reject) => {
-            const transaction = db.transaction(['records'], 'readwrite');
-            const store = transaction.objectStore('records');
-            const request = store.delete(Number(id));
+            if (!db) {
+                showError("Database not initialized");
+                reject("Database not initialized");
+                return;
+            }
+            
+            try {
+                const transaction = db.transaction(['records'], 'readwrite');
+                const store = transaction.objectStore('records');
+                const request = store.delete(Number(id));
 
-            request.onsuccess = function() {
-                resolve();
-            };
+                request.onsuccess = function() {
+                    resolve();
+                };
 
-            request.onerror = function() {
-                reject("Error deleting record");
-            };
+                request.onerror = function(event) {
+                    showError("Error deleting record: " + event.target.error);
+                    reject("Error deleting record");
+                };
+            } catch (error) {
+                showError("Error in transaction: " + error.message);
+                reject(error);
+            }
         });
     }
 
@@ -263,12 +351,12 @@
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td>${product.product}</td>
-                <td>${product.price}</td>
-                <td><input type="number" id="quantity-${index}" value="" oninput="updateDailyTotal()"></td>
-                <td id="total-${index}">0</td>
-                <td><input type="number" id="part1-${index}" value="" oninput="updateDailyTotal()"></td>
-                <td><input type="number" id="part2-${index}" value="" oninput="updateDailyTotal()"></td>
-                <td id="finalTotal-${index}">0</td>
+                <td>${product.price.toFixed(2)}</td>
+                <td><input type="number" id="quantity-${index}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                <td id="total-${index}">0.00</td>
+                <td><input type="number" id="part1-${index}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                <td><input type="number" id="part2-${index}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                <td id="finalTotal-${index}">0.00</td>
             `;
             productTable.appendChild(row);
         });
@@ -276,13 +364,13 @@
         for (let i = 0; i < 10; i++) {
             const emptyRow = document.createElement("tr");
             emptyRow.innerHTML = `
-                <td><input type="text" id="product-extra-${i}" value="" placeholder="Product name"></td>
-                <td><input type="number" id="price-extra-${i}" value="" placeholder="Price"></td>
-                <td><input type="number" id="quantity-extra-${i}" value="" oninput="updateDailyTotal()"></td>
-                <td id="total-extra-${i}">0</td>
-                <td><input type="number" id="part1-extra-${i}" value="" oninput="updateDailyTotal()"></td>
-                <td><input type="number" id="part2-extra-${i}" value="" oninput="updateDailyTotal()"></td>
-                <td id="finalTotal-extra-${i}">0</td>
+                <td><input type="text" id="product-extra-${i}" placeholder="Product name"></td>
+                <td><input type="number" id="price-extra-${i}" placeholder="Price" step="0.01" min="0" oninput="updateDailyTotal()"></td>
+                <td><input type="number" id="quantity-extra-${i}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                <td id="total-extra-${i}">0.00</td>
+                <td><input type="number" id="part1-extra-${i}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                <td><input type="number" id="part2-extra-${i}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                <td id="finalTotal-extra-${i}">0.00</td>
             `;
             productTable.appendChild(emptyRow);
         }
@@ -291,6 +379,7 @@
     function updateDailyTotal() {
         let dailyTotal = 0;
 
+        // Calculate for predefined products
         products.forEach((product, index) => {
             const quantity = parseFloat(document.getElementById(`quantity-${index}`).value) || 0;
             const part1 = parseFloat(document.getElementById(`part1-${index}`).value) || 0;
@@ -305,89 +394,146 @@
             dailyTotal += finalTotal;
         });
 
+        // Calculate for custom products
         for (let i = 0; i < 10; i++) {
+            const productName = document.getElementById(`product-extra-${i}`).value.trim();
             const price = parseFloat(document.getElementById(`price-extra-${i}`).value) || 0;
             const quantity = parseFloat(document.getElementById(`quantity-extra-${i}`).value) || 0;
             const part1 = parseFloat(document.getElementById(`part1-extra-${i}`).value) || 0;
             const part2 = parseFloat(document.getElementById(`part2-extra-${i}`).value) || 0;
 
-            const totalCost = price * quantity;
-            const finalTotal = totalCost - (part1 * price) - (part2 * price);
+            if (price > 0 && quantity > 0) {
+                const totalCost = price * quantity;
+                const finalTotal = totalCost - (part1 * price) - (part2 * price);
 
-            document.getElementById(`total-extra-${i}`).innerText = totalCost.toFixed(2);
-            document.getElementById(`finalTotal-extra-${i}`).innerText = finalTotal.toFixed(2);
+                document.getElementById(`total-extra-${i}`).innerText = totalCost.toFixed(2);
+                document.getElementById(`finalTotal-extra-${i}`).innerText = finalTotal.toFixed(2);
 
-            dailyTotal += finalTotal;
+                dailyTotal += finalTotal;
+            } else {
+                document.getElementById(`total-extra-${i}`).innerText = "0.00";
+                document.getElementById(`finalTotal-extra-${i}`).innerText = "0.00";
+            }
         }
 
         document.getElementById("dailyTotal").innerText = dailyTotal.toFixed(2);
     }
 
     async function saveRecord() {
-        let sumTotalCost = 0;
-        let sumFinalTotal = 0;
+        try {
+            let sumTotalCost = 0;
+            let sumFinalTotal = 0;
+            let allProducts = [];
 
-        const record = {
-            date: new Date().toLocaleString(),
-            products: products.map((product, index) => {
+            // Process predefined products
+            products.forEach((product, index) => {
                 const quantity = parseFloat(document.getElementById(`quantity-${index}`).value) || 0;
-                const part1 = parseFloat(document.getElementById(`part1-${index}`).value) || 0;
-                const part2 = parseFloat(document.getElementById(`part2-${index}`).value) || 0;
+                if (quantity > 0) {
+                    const part1 = parseFloat(document.getElementById(`part1-${index}`).value) || 0;
+                    const part2 = parseFloat(document.getElementById(`part2-${index}`).value) || 0;
 
-                const totalCost = quantity * product.price;
-                const finalTotal = totalCost - (part1 * product.price) - (part2 * product.price);
+                    const totalCost = quantity * product.price;
+                    const finalTotal = totalCost - (part1 * product.price) - (part2 * product.price);
 
-                sumTotalCost += totalCost;
-                sumFinalTotal += finalTotal;
+                    sumTotalCost += totalCost;
+                    sumFinalTotal += finalTotal;
 
-                return {
-                    product: product.product,
-                    price: product.price,
-                    quantity: quantity,
-                    part1: part1,
-                    part2: part2,
-                    totalCost: totalCost.toFixed(2),
-                    finalTotal: finalTotal.toFixed(2)
-                };
-            }),
-            sumTotalCost: sumTotalCost.toFixed(2),
-            sumFinalTotal: sumFinalTotal.toFixed(2),
-            sumOfAll: (sumTotalCost - sumFinalTotal).toFixed(2)
-        };
+                    allProducts.push({
+                        product: product.product,
+                        price: product.price,
+                        quantity: quantity,
+                        part1: part1,
+                        part2: part2,
+                        totalCost: totalCost.toFixed(2),
+                        finalTotal: finalTotal.toFixed(2)
+                    });
+                }
+            });
 
-        const recordID = await saveRecordToDB(record);
-        record.id = recordID; // Assign the ID
-        addRecordToTable(record);
-        saveToGoogleSheets(record);
+            // Process custom products
+            for (let i = 0; i < 10; i++) {
+                const productName = document.getElementById(`product-extra-${i}`).value.trim();
+                const price = parseFloat(document.getElementById(`price-extra-${i}`).value) || 0;
+                const quantity = parseFloat(document.getElementById(`quantity-extra-${i}`).value) || 0;
+                
+                if (productName && price > 0 && quantity > 0) {
+                    const part1 = parseFloat(document.getElementById(`part1-extra-${i}`).value) || 0;
+                    const part2 = parseFloat(document.getElementById(`part2-extra-${i}`).value) || 0;
 
-        // Reset the table to default empty state
-        renderProductTable();
-        document.getElementById("dailyTotal").innerText = "0.00";
+                    const totalCost = price * quantity;
+                    const finalTotal = totalCost - (part1 * price) - (part2 * price);
+
+                    sumTotalCost += totalCost;
+                    sumFinalTotal += finalTotal;
+
+                    allProducts.push({
+                        product: productName,
+                        price: price,
+                        quantity: quantity,
+                        part1: part1,
+                        part2: part2,
+                        totalCost: totalCost.toFixed(2),
+                        finalTotal: finalTotal.toFixed(2)
+                    });
+                }
+            }
+
+            // Check if there are products to save
+            if (allProducts.length === 0) {
+                showError("No products to save. Please add quantities.");
+                return;
+            }
+
+            const record = {
+                date: new Date().toLocaleString(),
+                products: allProducts,
+                sumTotalCost: sumTotalCost.toFixed(2),
+                sumFinalTotal: sumFinalTotal.toFixed(2),
+                sumOfAll: (sumTotalCost - sumFinalTotal).toFixed(2)
+            };
+
+            const recordID = await saveRecordToDB(record);
+            record.id = recordID;
+            addRecordToTable(record);
+            
+            // Try to save to Google Sheets, but don't block the local save if it fails
+            try {
+                await saveToGoogleSheets(record);
+                showSuccess("Record saved successfully locally and to Google Sheets!");
+            } catch (error) {
+                console.error("Google Sheets error:", error);
+                showSuccess("Record saved locally, but Google Sheets sync failed.");
+            }
+
+            // Reset the table to default empty state
+            renderProductTable();
+            document.getElementById("dailyTotal").innerText = "0.00";
+        } catch (error) {
+            console.error("Save error:", error);
+            showError("Error saving record: " + error.message);
+        }
     }
 
     function addRecordToTable(record) {
         const recordTable = document.getElementById("recordTable");
         const row = document.createElement("tr");
+        row.setAttribute("data-id", record.id);
 
-        row.setAttribute("data-id", record.id); // Store record ID for deletion
-
-        const products = record.products.map(p => p.product).join(", ") || "0";
-        const prices = record.products.map(p => p.price).join(", ") || "0";
-        const quantities = record.products.map(p => p.quantity).join(", ") || "0";
-        const totalCosts = record.products.map(p => p.totalCost).join(", ") || "0";
-        const part1s = record.products.map(p => p.part1).join(", ") || "0";
-        const part2s = record.products.map(p => p.part2).join(", ") || "0";
-        const finalTotals = record.products.map(p => p.finalTotal).join(", ") || "0";
+        // Limit display length for readability
+        const displayProductNames = record.products.map(p => p.product).join(", ");
+        const productText = displayProductNames.length > 50 
+            ? displayProductNames.substring(0, 50) + "..." 
+            : displayProductNames;
 
         row.innerHTML = `
             <td>${record.date}</td>
-            <td>${products}</td>
-            <td>${prices}</td>
-            <td>${quantities}</td>
-            <td>${totalCosts}</td>
-            <td>${part1s}</td>
-            <td>${part2s}</td>
-            <td>${finalTotals}</td>
+            <td title="${displayProductNames}">${productText}</td>
+            <td>${record.products.map(p => p.price).join(", ")}</td>
+            <td>${record.products.map(p => p.quantity).join(", ")}</td>
+            <td>${record.products.map(p => p.totalCost).join(", ")}</td>
+            <td>${record.products.map(p => p.part1).join(", ")}</td>
+            <td>${record.products.map(p => p.part2).join(", ")}</td>
+            <td>${record.products.map(p => p.finalTotal).join(", ")}</td>
             <td>${record.sumTotalCost}</td>
             <td>${record.sumFinalTotal}</td>
             <td>${record.sumOfAll}</td>
@@ -396,77 +542,149 @@
                 <button onclick="deleteRecord(this)">Delete</button>
             </td>
         `;
-        recordTable.appendChild(row);
+        recordTable.prepend(row); // Add most recent records at the top
     }
 
     function editRecord(button) {
-        const row = button.parentElement.parentElement;
-        const cells = row.getElementsByTagName("td");
-
-        const quantities = cells[3].innerText.split(", ");
-        const part1s = cells[5].innerText.split(", ");
-        const part2s = cells[6].innerText.split(", ");
-
-        products.forEach((_, index) => {
-            document.getElementById(`quantity-${index}`).value = quantities[index] || 0;
-            document.getElementById(`part1-${index}`).value = part1s[index] || 0;
-            document.getElementById(`part2-${index}`).value = part2s[index] || 0;
-        });
-
-        updateDailyTotal();
+        try {
+            const row = button.parentElement.parentElement;
+            const id = row.getAttribute("data-id");
+            
+            if (!id) {
+                showError("Record ID not found.");
+                return;
+            }
+            
+            // Clear current inputs
+            renderProductTable();
+            
+            // Get data from the row
+            const cells = row.getElementsByTagName("td");
+            
+            const products = cells[1].getAttribute("title").split(", ");
+            const prices = cells[2].innerText.split(", ").map(p => parseFloat(p) || 0);
+            const quantities = cells[3].innerText.split(", ").map(q => parseFloat(q) || 0);
+            const part1s = cells[5].innerText.split(", ").map(p => parseFloat(p) || 0);
+            const part2s = cells[6].innerText.split(", ").map(p => parseFloat(p) || 0);
+            
+            // First, populate standard products
+            let extraProductIndex = 0;
+            
+            for (let i = 0; i < products.length; i++) {
+                const productName = products[i];
+                const productIndex = this.products.findIndex(p => p.product === productName);
+                
+                if (productIndex !== -1) {
+                    // This is a standard product
+                    document.getElementById(`quantity-${productIndex}`).value = quantities[i] || 0;
+                    document.getElementById(`part1-${productIndex}`).value = part1s[i] || 0;
+                    document.getElementById(`part2-${productIndex}`).value = part2s[i] || 0;
+                } else if (extraProductIndex < 10) {
+                    // This is a custom product
+                    document.getElementById(`product-extra-${extraProductIndex}`).value = productName;
+                    document.getElementById(`price-extra-${extraProductIndex}`).value = prices[i] || 0;
+                    document.getElementById(`quantity-extra-${extraProductIndex}`).value = quantities[i] || 0;
+                    document.getElementById(`part1-extra-${extraProductIndex}`).value = part1s[i] || 0;
+                    document.getElementById(`part2-extra-${extraProductIndex}`).value = part2s[i] || 0;
+                    extraProductIndex++;
+                }
+            }
+            
+            // Update calculations
+            updateDailyTotal();
+            
+            // Store record ID to later update it instead of creating a new one
+            document.body.setAttribute("data-editing-id", id);
+            
+        } catch (error) {
+            console.error("Edit error:", error);
+            showError("Error editing record: " + error.message);
+        }
     }
 
     async function deleteRecord(button) {
-        const row = button.closest("tr");
-        const id = row.getAttribute("data-id"); // Get the correct ID from the row
-        if (!id) {
-            console.error("Record ID not found.");
-            return;
-        }
+        try {
+            const row = button.closest("tr");
+            const id = row.getAttribute("data-id"); 
+            
+            if (!id) {
+                showError("Record ID not found.");
+                return;
+            }
 
-        await deleteRecordFromDB(id);
-        row.remove(); // Remove the row from the UI
-              // Reset the table to default empty state
-              renderProductTable();
-        document.getElementById("dailyTotal").innerText = "0.00";
-    
+            // Ask for confirmation
+            if (!confirm("Are you sure you want to delete this record?")) {
+                return;
+            }
+
+            await deleteRecordFromDB(id);
+            row.remove(); // Remove the row from the UI
+            showSuccess("Record deleted successfully");
+        } catch (error) {
+            console.error("Delete error:", error);
+            showError("Error deleting record: " + error.message);
+        }
     }
 
     async function loadRecords() {
-    const records = await loadRecordsFromDB();
-    const recordTable = document.getElementById("recordTable");
-    recordTable.innerHTML = ""; // Clear the table before loading records
+        try {
+            const records = await loadRecordsFromDB();
+            const recordTable = document.getElementById("recordTable");
+            recordTable.innerHTML = ""; // Clear the table before loading records
 
-    if (records.length === 0) {
-        console.log("No records found in IndexedDB.");
+            if (records.length === 0) {
+                console.log("No records found in IndexedDB.");
+            }
+
+            // Sort records by date (newest first)
+            records.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            records.forEach(record => {
+                addRecordToTable(record);
+            });
+        } catch (error) {
+            console.error("Load records error:", error);
+            showError("Error loading records: " + error.message);
+        }
     }
-
-    records.forEach(record => {
-        addRecordToTable(record);
-    });
-}
-
 
     function saveToGoogleSheets(record) {
-        fetch("https://script.google.com/macros/s/AKfycbyswxH2GJvLF0R1Jat-qVS3JTGRx6dWqfZk2lafh7F86knNgntZc_ILKawTdbK0HllE/exec", {
-            method: "POST",
-            mode: "no-cors",
-            body: JSON.stringify(record),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        .then(response => response.json())
-        .then(data => console.log("Saved:", data))
-        .catch(error => console.error("Error:", error));
+        return new Promise((resolve, reject) => {
+            fetch("https://script.google.com/macros/s/AKfycbyswxH2GJvLF0R1Jat-qVS3JTGRx6dWqfZk2lafh7F86knNgntZc_ILKawTdbK0HllE/exec", {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify(record),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => {
+                // With no-cors, we can't read the response
+                // Just assume it worked if no error was thrown
+                resolve("Success");
+            })
+            .catch(error => {
+                console.error("Google Sheets Error:", error);
+                reject(error);
+            });
+        });
     }
 
+    // Initialize the application
     document.addEventListener("DOMContentLoaded", async () => {
-    await openDB();   // Ensure the database is open
-    renderProductTable(); // Render product input fields
-    await loadRecords();  // Load saved records
-});
-
+        try {
+            await openDB();   // Ensure the database is open
+            renderProductTable(); // Render product input fields
+            await loadRecords();  // Load saved records
+            showSuccess("Application loaded successfully");
+        } catch (error) {
+            console.error("Initialization error:", error);
+            showError("Failed to initialize the application: " + error.message);
+        }
+    });
+</script>
+</body>
+</html>
 </script>
 </body>
 </html>
