@@ -35,12 +35,11 @@
             background-color: #f9f9f9;
             color: var(--dark);
             line-height: 1.6;
-            padding: 20px;
+            padding: 10px;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            width: 100%;
             padding: 20px;
             background-color: var(--white);
             border-radius: var(--border-radius);
@@ -310,13 +309,152 @@
             font-size: 0.875rem;
         }
 
+        /* Modal styles for detailed record view */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            width: 80%;
+            max-width: 900px;
+            box-shadow: var(--shadow);
+            animation: modalFadeIn 0.3s;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--gray-light);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--gray);
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: var(--danger);
+        }
+
+        .record-details-table {
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .record-details-table th {
+            text-align: left;
+            background-color: var(--primary-light);
+        }
+
+        .record-summary {
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .record-summary div {
+            text-align: center;
+        }
+
+        .record-summary-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+
+        .record-summary-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        @keyframes modalFadeIn {
+            from {opacity: 0; transform: translateY(-30px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        /* Record list styles */
+        .record-item {
+            cursor: pointer;
+        }
+
+        .record-item:hover {
+            background-color: rgba(52, 152, 219, 0.2);
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark);
+            color: var(--white);
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--dark) transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
         @media (max-width: 768px) {
             body {
-                padding: 10px;
+                padding: 5px;
             }
 
             .container {
-                padding: 15px;
+                padding: 10px;
             }
 
             h1 {
@@ -345,7 +483,12 @@
                 font-size: 0.875rem;
             }
 
-            .grid {
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+
+            .record-summary {
                 grid-template-columns: 1fr;
             }
         }
@@ -404,13 +547,8 @@
                         <thead>
                             <tr>
                                 <th>Data</th>
-                                <th>Produkte</th>
-                                <th>Çmimet</th>
-                                <th>Sasitë</th>
-                                <th>Kostoja Totale</th>
-                                <th>Turni 1</th>
-                                <th>Turni 2</th>
-                                <th>Totali Final</th>
+                                <th>Produktet</th>
+                                <th>Totali i Produkteve</th>
                                 <th>Gjithsej kostoTotale</th>
                                 <th>Gjithsej Totali Final</th>
                                 <th>Xhiro ditore</th>
@@ -425,6 +563,17 @@
 
         <div class="footer">
             <p>© <span id="current-year"></span> Inventari System</p>
+        </div>
+    </div>
+
+    <!-- Modal for displaying record details -->
+    <div id="recordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Detaje të Rekordeve</h3>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+            </div>
+            <div id="recordDetails"></div>
         </div>
     </div>
 
@@ -497,6 +646,23 @@
             setTimeout(() => {
                 successElement.style.display = "none";
             }, 3000);
+        }
+
+        // Open and close modal
+        function openModal() {
+            document.getElementById("recordModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("recordModal").style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            const modal = document.getElementById("recordModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
         }
 
         function openDB() {
@@ -789,40 +955,119 @@
             const recordTable = document.getElementById("recordTable");
             const row = document.createElement("tr");
             row.setAttribute("data-id", record.id);
+            row.className = "record-item";
+            row.onclick = function() { showRecordDetails(record); };
 
+            // Count products
+            const productCount = record.products.length;
+            
             // Limit display length for readability
             const displayProductNames = record.products.map(p => p.product).join(", ");
-            const productText = displayProductNames.length > 50 
-                ? displayProductNames.substring(0, 50) + "..." 
+            const productText = displayProductNames.length > 30 
+                ? displayProductNames.substring(0, 30) + "..." 
                 : displayProductNames;
 
             row.innerHTML = `
                 <td>${record.date}</td>
-                <td title="${displayProductNames}">${productText}</td>
-                <td>${record.products.map(p => p.price).join(", ")}</td>
-                <td>${record.products.map(p => p.quantity).join(", ")}</td>
-                <td>${record.products.map(p => p.totalCost).join(", ")}</td>
-                <td>${record.products.map(p => p.part1).join(", ")}</td>
-                <td>${record.products.map(p => p.part2).join(", ")}</td>
-                <td>${record.products.map(p => p.finalTotal).join(", ")}</td>
-                <td>${record.sumTotalCost}</td>
-                <td>${record.sumFinalTotal}</td>
-                <td>${record.sumOfAll}</td>
+                <td title="${displayProductNames}">${productText} 
+                    <span class="badge badge-success">${productCount} produktet</span>
+                </td>
+                <td>${record.products.reduce((total, product) => total + parseFloat(product.quantity), 0).toFixed(0)} cope</td>
+                <td>${record.sumTotalCost} L</td>
+                <td>${record.sumFinalTotal} L</td>
+                <td>${record.sumOfAll} L</td>
                 <td class="table-actions">
-                    <button onclick="editRecord(this)" class="btn-warning btn-sm">
+                    <button onclick="editRecord(event, this)" class="btn-warning btn-sm" title="Edit">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button onclick="deleteRecord(this)" class="btn-danger btn-sm">
+                    <button onclick="deleteRecord(event, this)" class="btn-danger btn-sm" title="Delete">
                         <i class="fas fa-trash"></i>
+                    </button>
+                    <button onclick="showRecordDetails(${JSON.stringify(record).replace(/"/g, '&quot;')}, event)" class="btn-sm" title="Details">
+                        <i class="fas fa-eye"></i>
                     </button>
                 </td>
             `;
             recordTable.prepend(row); // Add most recent records at the top
         }
 
-        function editRecord(button) {
+        function showRecordDetails(record, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            const detailsContainer = document.getElementById("recordDetails");
+            
+            // Format date nicely
+            const recordDate = new Date(record.date);
+            const formattedDate = recordDate instanceof Date && !isNaN(recordDate) 
+                ? recordDate.toLocaleDateString() + ' ' + recordDate.toLocaleTimeString() 
+                : record.date;
+            
+            // Create content for the modal
+            let content = `
+                <div class="record-summary">
+                    <div>
+                        <div class="record-summary-label">Gjithsej kostoTotale</div>
+                        <div class="record-summary-value">${record.sumTotalCost} L</div>
+                    </div>
+                    <div>
+                        <div class="record-summary-label">Gjithsej Totali Final</div>
+                        <div class="record-summary-value">${record.sumFinalTotal} L</div>
+                    </div>
+                    <div>
+                        <div class="record-summary-label">Xhiro ditore</div>
+                        <div class="record-summary-value">${record.sumOfAll} L</div>
+                    </div>
+                </div>
+                <h4 style="margin-top: 20px;">Detajet e Produkteve</h4>
+                <div class="table-responsive">
+                    <table class="record-details-table">
+                        <thead>
+                            <tr>
+                                <th>Produktet</th>
+                                <th>Cmimi</th>
+                                <th>Sasia</th>
+                                <th>Kostoja Totale</th>
+                                <th>Turni 1</th>
+                                <th>Turni 2</th>
+                                <th>Totali Final</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            // Add each product
+            record.products.forEach(product => {
+                content += `
+                    <tr>
+                        <td>${product.product}</td>
+                        <td>${parseFloat(product.price).toFixed(2)} L</td>
+                        <td>${product.quantity}</td>
+                        <td>${product.totalCost} L</td>
+                        <td>${product.part1}</td>
+                        <td>${product.part2}</td>
+                        <td>${product.finalTotal} L</td>
+                    </tr>
+                `;
+            });
+            
+            content += `
+                        </tbody>
+                    </table>
+                </div>
+                <p style="margin-top: 15px; color: var(--gray);">Record ID: ${record.id} | Recorded on: ${formattedDate}</p>
+            `;
+            
+            detailsContainer.innerHTML = content;
+            openModal();
+        }
+
+        function editRecord(event, button) {
+            event.stopPropagation(); // Prevent triggering the row's onclick
+            
             try {
-                const row = button.parentElement.parentElement;
+                const row = button.closest("tr");
                 const id = row.getAttribute("data-id");
                 
                 if (!id) {
@@ -830,55 +1075,73 @@
                     return;
                 }
                 
-                // Clear current inputs
-                renderProductTable();
+                // Get the full record from DB to edit
+                const transaction = db.transaction(['records'], 'readonly');
+                const store = transaction.objectStore('records');
+                const request = store.get(Number(id));
                 
-                // Get data from the row
-                const cells = row.getElementsByTagName("td");
-                
-                const products = cells[1].getAttribute("title").split(", ");
-                const prices = cells[2].innerText.split(", ").map(p => parseFloat(p) || 0);
-                const quantities = cells[3].innerText.split(", ").map(q => parseFloat(q) || 0);
-                const part1s = cells[5].innerText.split(", ").map(p => parseFloat(p) || 0);
-                const part2s = cells[6].innerText.split(", ").map(p => parseFloat(p) || 0);
-                
-                // First, populate standard products
-                let extraProductIndex = 0;
-                
-                for (let i = 0; i < products.length; i++) {
-                    const productName = products[i];
-                    const productIndex = this.products.findIndex(p => p.product === productName);
+                request.onsuccess = function(event) {
+                    const record = event.target.result;
                     
-                    if (productIndex !== -1) {
-                        // This is a standard product
-                        document.getElementById(`quantity-${productIndex}`).value = quantities[i] || 0;
-                        document.getElementById(`part1-${productIndex}`).value = part1s[i] || 0;
-                        document.getElementById(`part2-${productIndex}`).value = part2s[i] || 0;
-                    } else if (extraProductIndex < 10) {
-                        // This is a custom product
-                        document.getElementById(`product-extra-${extraProductIndex}`).value = productName;
-                        document.getElementById(`price-extra-${extraProductIndex}`).value = prices[i] || 0;
-                        document.getElementById(`quantity-extra-${extraProductIndex}`).value = quantities[i] || 0;
-                        document.getElementById(`part1-extra-${extraProductIndex}`).value = part1s[i] || 0;
-                        document.getElementById(`part2-extra-${extraProductIndex}`).value = part2s[i] || 0;
-                        extraProductIndex++;
+                    if (!record) {
+                        showError("Record not found.");
+                        return;
                     }
-                }
+                    
+                    // Clear current inputs
+                    renderProductTable();
+                    
+                    // Populate standard products
+                    record.products.forEach(productData => {
+                        const productName = productData.product;
+                        const productIndex = products.findIndex(p => p.product === productName);
+                        
+                        if (productIndex !== -1) {
+                            // This is a standard product
+                            document.getElementById(`quantity-${productIndex}`).value = productData.quantity || 0;
+                            document.getElementById(`part1-${productIndex}`).value = productData.part1 || 0;
+                            document.getElementById(`part2-${productIndex}`).value = productData.part2 || 0;
+                        } else {
+                            // Find an empty custom product slot
+                            for (let i = 0; i < 10; i++) {
+                                const currentProduct = document.getElementById(`product-extra-${i}`).value;
+                                if (!currentProduct) {
+                                    document.getElementById(`product-extra-${i}`).value = productName;
+                                    document.getElementById(`price-extra-${i}`).value = productData.price || 0;
+                                    document.getElementById(`quantity-extra-${i}`).value = productData.quantity || 0;
+                                    document.getElementById(`part1-extra-${i}`).value = productData.part1 || 0;
+                                    document.getElementById(`part2-extra-${i}`).value = productData.part2 || 0;
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                    
+                    // Update calculations
+                    updateDailyTotal();
+                    
+                    // Store record ID to later update it instead of creating a new one
+                    document.body.setAttribute("data-editing-id", id);
+                    
+                    // Scroll to the top of the page to edit
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                    
+                    showSuccess("Record loaded for editing");
+                };
                 
-                // Update calculations
-                updateDailyTotal();
+                request.onerror = function(event) {
+                    showError("Error loading record: " + event.target.error);
+                };
                 
-                // Store record ID to later update it instead of creating a new one
-                document.body.setAttribute("data-editing-id", id);
-                
-                showSuccess("Record loaded for editing");
             } catch (error) {
                 console.error("Edit error:", error);
                 showError("Error editing record: " + error.message);
             }
         }
 
-        async function deleteRecord(button) {
+        async function deleteRecord(event, button) {
+            event.stopPropagation(); // Prevent triggering the row's onclick
+            
             try {
                 const row = button.closest("tr");
                 const id = row.getAttribute("data-id"); 
