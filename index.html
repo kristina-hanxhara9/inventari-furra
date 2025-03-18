@@ -7,18 +7,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2c3e50;
-            --primary-light: #34495e;
-            --secondary: #3498db;
-            --secondary-light: #5dade2;
-            --success: #2ecc71;
-            --danger: #e74c3c;
-            --warning: #f39c12;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --white: #ffffff;
-            --gray: #95a5a6;
-            --gray-light: #bdc3c7;
+            --primary: #556B2F;
+            --primary-light: #6B8E23;
+            --secondary: #8FBC8F;
+            --secondary-light: #9ACD32;
+            --success: #4CAF50;
+            --danger: #DC3545;
+            --warning: #F0AD4E;
+            --light: #F5F5F5;
+            --dark: #444444;
+            --white: #FFFFFF;
+            --gray: #808080;
+            --gray-light: #CCCCCC;
             --border-radius: 8px;
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
@@ -113,7 +113,7 @@
         input:focus, select:focus {
             outline: none;
             border-color: var(--secondary);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+            box-shadow: 0 0 0 3px rgba(143, 188, 143, 0.25);
         }
 
         input[type="number"] {
@@ -123,7 +123,7 @@
         button {
             cursor: pointer;
             background-color: var(--secondary);
-            color: var(--white);
+            color: var(--dark);
             border: none;
             font-weight: 600;
             text-transform: uppercase;
@@ -145,26 +145,29 @@
 
         .btn-success {
             background-color: var(--success);
+            color: var(--white);
         }
 
         .btn-success:hover {
-            background-color: #27ae60;
+            background-color: #45a049;
         }
 
         .btn-danger {
             background-color: var(--danger);
+            color: var(--white);
         }
 
         .btn-danger:hover {
-            background-color: #c0392b;
+            background-color: #c82333;
         }
 
         .btn-warning {
             background-color: var(--warning);
+            color: var(--dark);
         }
 
         .btn-warning:hover {
-            background-color: #d35400;
+            background-color: #ec971f;
         }
 
         .btn-sm {
@@ -205,11 +208,11 @@
         }
 
         tr:nth-child(even) {
-            background-color: rgba(236, 240, 241, 0.5);
+            background-color: rgba(245, 245, 245, 0.5);
         }
 
         tr:hover {
-            background-color: rgba(52, 152, 219, 0.1);
+            background-color: rgba(143, 188, 143, 0.1);
         }
 
         .table-actions {
@@ -226,15 +229,15 @@
         }
 
         .alert-success {
-            background-color: rgba(46, 204, 113, 0.2);
-            color: #27ae60;
-            border: 1px solid #27ae60;
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #45a049;
+            border: 1px solid #45a049;
         }
 
         .alert-danger {
-            background-color: rgba(231, 76, 60, 0.2);
-            color: #c0392b;
-            border: 1px solid #c0392b;
+            background-color: rgba(220, 53, 69, 0.2);
+            color: #c82333;
+            border: 1px solid #c82333;
         }
 
         .total-section {
@@ -406,7 +409,7 @@
         }
 
         .record-item:hover {
-            background-color: rgba(52, 152, 219, 0.2);
+            background-color: rgba(143, 188, 143, 0.2);
         }
 
         /* Tooltip */
@@ -504,38 +507,31 @@
         <div id="errorMessage" class="alert alert-danger"></div>
         <div id="successMessage" class="alert alert-success"></div>
 
-        <div class="card">
-            <div class="card-header">
-                <i class="fas fa-boxes"></i> Produktet
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Produktet</th>
-                                <th>Cmimi (per cope)</th>
-                                <th>Sasia</th>
-                                <th>Kostoja Totale</th>
-                                <th>Turni 1</th>
-                                <th>Turni 2</th>
-                                <th>Totali Final</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productTable"></tbody>
-                    </table>
-                </div>
-
-                <div class="total-section">
-                    <h3 style="margin: 0; color: white;">Kostoja Totale Ditore</h3>
-                    <div class="total-value">L <span id="dailyTotal">0.00</span></div>
-                </div>
-
-                <button onclick="saveRecord()" class="btn-success">
-                    <i class="fas fa-save"></i> Ruaji të dhënat
-                </button>
-            </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produktet</th>
+                        <th>Cmimi (per cope)</th>
+                        <th>Sasia</th>
+                        <th>Kostoja Totale</th>
+                        <th>Turni 1</th>
+                        <th>Turni 2</th>
+                        <th>Totali Final</th>
+                    </tr>
+                </thead>
+                <tbody id="productTable"></tbody>
+            </table>
         </div>
+
+        <div class="total-section">
+            <h3 style="margin: 0; color: white;">Kostoja Totale Ditore</h3>
+            <div class="total-value">L <span id="dailyTotal">0.00</span></div>
+        </div>
+
+        <button onclick="saveRecord()" class="btn-success">
+            <i class="fas fa-save"></i> Ruaji të dhënat
+        </button>
 
         <div class="card">
             <div class="card-header">
@@ -789,10 +785,10 @@
                 row.innerHTML = `
                     <td>${product.product}</td>
                     <td>${product.price.toFixed(2)}</td>
-                    <td><input type="number" id="quantity-${index}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                    <td><input type="number" id="quantity-${index}" value="" min="0" oninput="updateDailyTotal()"></td>
                     <td id="total-${index}">0.00</td>
-                    <td><input type="number" id="part1-${index}" value="0" min="0" oninput="updateDailyTotal()"></td>
-                    <td><input type="number" id="part2-${index}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                    <td><input type="number" id="part1-${index}" value="" min="0" oninput="updateDailyTotal()"></td>
+                    <td><input type="number" id="part2-${index}" value="" min="0" oninput="updateDailyTotal()"></td>
                     <td id="finalTotal-${index}">0.00</td>
                 `;
                 productTable.appendChild(row);
@@ -803,10 +799,10 @@
                 emptyRow.innerHTML = `
                     <td><input type="text" id="product-extra-${i}" placeholder="Product name"></td>
                     <td><input type="number" id="price-extra-${i}" placeholder="Price" step="0.01" min="0" oninput="updateDailyTotal()"></td>
-                    <td><input type="number" id="quantity-extra-${i}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                    <td><input type="number" id="quantity-extra-${i}" value="" min="0" oninput="updateDailyTotal()"></td>
                     <td id="total-extra-${i}">0.00</td>
-                    <td><input type="number" id="part1-extra-${i}" value="0" min="0" oninput="updateDailyTotal()"></td>
-                    <td><input type="number" id="part2-extra-${i}" value="0" min="0" oninput="updateDailyTotal()"></td>
+                    <td><input type="number" id="part1-extra-${i}" value="" min="0" oninput="updateDailyTotal()"></td>
+                    <td><input type="number" id="part2-extra-${i}" value="" min="0" oninput="updateDailyTotal()"></td>
                     <td id="finalTotal-extra-${i}">0.00</td>
                 `;
                 productTable.appendChild(emptyRow);
@@ -1098,19 +1094,19 @@
                         
                         if (productIndex !== -1) {
                             // This is a standard product
-                            document.getElementById(`quantity-${productIndex}`).value = productData.quantity || 0;
-                            document.getElementById(`part1-${productIndex}`).value = productData.part1 || 0;
-                            document.getElementById(`part2-${productIndex}`).value = productData.part2 || 0;
+                            document.getElementById(`quantity-${productIndex}`).value = productData.quantity || '';
+                            document.getElementById(`part1-${productIndex}`).value = productData.part1 || '';
+                            document.getElementById(`part2-${productIndex}`).value = productData.part2 || '';
                         } else {
                             // Find an empty custom product slot
                             for (let i = 0; i < 10; i++) {
                                 const currentProduct = document.getElementById(`product-extra-${i}`).value;
                                 if (!currentProduct) {
                                     document.getElementById(`product-extra-${i}`).value = productName;
-                                    document.getElementById(`price-extra-${i}`).value = productData.price || 0;
-                                    document.getElementById(`quantity-extra-${i}`).value = productData.quantity || 0;
-                                    document.getElementById(`part1-extra-${i}`).value = productData.part1 || 0;
-                                    document.getElementById(`part2-extra-${i}`).value = productData.part2 || 0;
+                                    document.getElementById(`price-extra-${i}`).value = productData.price || '';
+                                    document.getElementById(`quantity-extra-${i}`).value = productData.quantity || '';
+                                    document.getElementById(`part1-extra-${i}`).value = productData.part1 || '';
+                                    document.getElementById(`part2-extra-${i}`).value = productData.part2 || '';
                                     break;
                                 }
                             }
