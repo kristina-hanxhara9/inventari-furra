@@ -529,7 +529,7 @@
             <div class="total-value">L <span id="dailyTotal">0.00</span></div>
         </div>
 
-        <button onclick="saveRecord()" class="btn-success">
+        <button onclick="saveRecord()" class="btn-success" id="saveButton">
             <i class="fas fa-save"></i> Ruaji të dhënat
         </button>
 
@@ -719,6 +719,36 @@
             });
         }
 
+        function updateRecordInDB(id, record) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    showError("Database not initialized");
+                    reject("Database not initialized");
+                    return;
+                }
+                
+                try {
+                    const transaction = db.transaction(['records'], 'readwrite');
+                    const store = transaction.objectStore('records');
+                    // Make sure the record has the correct ID
+                    record.id = id;
+                    const request = store.put(record); // put updates existing records or adds new ones
+
+                    request.onsuccess = function(event) {
+                        resolve();
+                    };
+
+                    request.onerror = function(event) {
+                        showError("Error updating record: " + event.target.error);
+                        reject("Error updating record");
+                    };
+                } catch (error) {
+                    showError("Error in transaction: " + error.message);
+                    reject(error);
+                }
+            });
+        }
+
         function loadRecordsFromDB() {
             return new Promise((resolve, reject) => {
                 if (!db) {
@@ -857,6 +887,18 @@
                 let sumTotalCost = 0;
                 let sumFinalTotal = 0;
                 let allProducts = [];
+                
+                // Check if we're editing an existing record
+                const editingId = document.body.getAttribute("data-editing-id");
+                const isEdit = !!editingId;
+
+                // Update button text based on edit mode
+                const saveButton = document.getElementById("saveButton");
+                if (isEdit) {
+                    saveButton.innerHTML = '<i class="fas fa-save"></i> Update Record';
+                } else {
+                    saveButton.innerHTML = '<i class="fas fa-save"></i> Ruaji të dhënat';
+                }
 
                 // Process predefined products
                 products.forEach((product, index) => {
@@ -922,25 +964,46 @@
                     products: allProducts,
                     sumTotalCost: sumTotalCost.toFixed(2),
                     sumFinalTotal: sumFinalTotal.toFixed(2),
-                    sumOfAll: (sumTotalCost - sumFinalTotal).toFixed(2)
+                    sumOfAll: (sumTotalCost - sumFinalTotal).toFixed(2),
+                    isEdit: isEdit
                 };
 
-                const recordID = await saveRecordToDB(record);
-                record.id = recordID;
+                let recordID;
+                
+                if (isEdit) {
+                    // Update the existing record in IndexedDB
+                    record.id = parseInt(editingId);
+                    await updateRecordInDB(parseInt(editingId), record);
+                    recordID = parseInt(editingId);
+                    
+                    // Update UI - remove the old row
+                    const row = document.querySelector(`tr[data-id="${editingId}"]`);
+                    if (row) row.remove();
+                } else {
+                    // Create a new record in IndexedDB
+                    recordID = await saveRecordToDB(record);
+                    record.id = recordID;
+                }
+                
+                // Add the record to the table
                 addRecordToTable(record);
                 
                 // Try to save to Google Sheets, but don't block the local save if it fails
                 try {
                     await saveToGoogleSheets(record);
-                    showSuccess("Record saved successfully locally and to Google Sheets!");
+                    showSuccess(isEdit ? "Record updated successfully locally and in Google Sheets!" : "Record saved successfully locally and to Google Sheets!");
                 } catch (error) {
                     console.error("Google Sheets error:", error);
-                    showSuccess("Record saved locally, but Google Sheets sync failed.");
+                    showSuccess(isEdit ? "Record updated locally, but Google Sheets sync failed." : "Record saved locally, but Google Sheets sync failed.");
                 }
 
                 // Reset the table to default empty state
                 renderProductTable();
                 document.getElementById("dailyTotal").innerText = "0.00";
+                
+                // Clear editing state
+                document.body.removeAttribute("data-editing-id");
+                saveButton.innerHTML = '<i class="fas fa-save"></i> Ruaji të dhënat';
             } catch (error) {
                 console.error("Save error:", error);
                 showError("Error saving record: " + error.message);
@@ -1119,6 +1182,9 @@
                     // Store record ID to later update it instead of creating a new one
                     document.body.setAttribute("data-editing-id", id);
                     
+                    // Update button text to indicate edit mode
+                    document.getElementById("saveButton").innerHTML = '<i class="fas fa-save"></i> Update Record';
+                    
                     // Scroll to the top of the page to edit
                     window.scrollTo({top: 0, behavior: 'smooth'});
                     
@@ -1152,8 +1218,23 @@
                     return;
                 }
 
+                // Delete from local DB
                 await deleteRecordFromDB(id);
-                row.remove(); // Remove the row from the UI
+                
+                // Try to delete from Google Sheets by sending a delete flag
+                try {
+                    await saveToGoogleSheets({
+                        id: id,
+                        isDelete: true,
+                        date: new Date().toLocaleString() // Include date for logging purposes
+                    });
+                } catch (error) {
+                    console.error("Google Sheets delete error:", error);
+                    // Continue with UI update even if Google Sheets delete fails
+                }
+                
+                // Remove from UI
+                row.remove();
                 showSuccess("Record deleted successfully");
             } catch (error) {
                 console.error("Delete error:", error);
@@ -1185,7 +1266,7 @@
 
         function saveToGoogleSheets(record) {
             return new Promise((resolve, reject) => {
-                fetch("https://script.google.com/macros/s/AKfycbzWEycRE7pufxIOccAF1FI-YQSfJSoqh85HZ3gPl2erh2HtSpB6NvMRSm0EcVYjjmSn/exec", {
+                fetch("https://script.google.com/macros/s/AKfycbyswxH2GJvLF0R1Jat-qVS3JTGRx6dWqfZk2lafh7F86knNgntZc_ILKawTdbK0HllE/exec", {
                     method: "POST",
                     mode: "no-cors",
                     body: JSON.stringify(record),
