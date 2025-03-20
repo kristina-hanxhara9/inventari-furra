@@ -170,6 +170,15 @@
             background-color: #ec971f;
         }
 
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #1e3a5e;
+        }
+
         .btn-sm {
             padding: 6px 10px;
             font-size: 0.875rem;
@@ -451,6 +460,17 @@
             opacity: 1;
         }
 
+        /* Action buttons container */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons button {
+            width: auto;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 5px;
@@ -494,6 +514,10 @@
             .record-summary {
                 grid-template-columns: 1fr;
             }
+
+            .action-buttons {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -506,6 +530,16 @@
 
         <div id="errorMessage" class="alert alert-danger"></div>
         <div id="successMessage" class="alert alert-success"></div>
+
+        <!-- New Action buttons section with Permbledhje button -->
+        <div class="action-buttons">
+            <button onclick="saveRecord()" class="btn-success" id="saveButton">
+                <i class="fas fa-save"></i> Ruaji të dhënat
+            </button>
+            <button onclick="window.open('permbledhje.html', '_blank')" class="btn-primary">
+                <i class="fas fa-chart-line"></i> Permbledhjet e diteve
+            </button>
+        </div>
 
         <div class="table-responsive">
             <table>
@@ -528,10 +562,6 @@
             <h3 style="margin: 0; color: white;">Kostoja Totale Ditore</h3>
             <div class="total-value">L <span id="dailyTotal">0.00</span></div>
         </div>
-
-        <button onclick="saveRecord()" class="btn-success" id="saveButton">
-            <i class="fas fa-save"></i> Ruaji të dhënat
-        </button>
 
         <div class="card">
             <div class="card-header">
@@ -1302,6 +1332,32 @@
             document.getElementById("current-year").textContent = now.getFullYear();
         }
 
+        // Check if we need to show a specific record (coming from permbledhje page)
+        function checkForViewParameter() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const viewId = urlParams.get('view');
+            
+            if (viewId) {
+                try {
+                    const id = parseInt(viewId);
+                    if (!isNaN(id)) {
+                        const transaction = db.transaction(['records'], 'readonly');
+                        const store = transaction.objectStore('records');
+                        const request = store.get(id);
+                        
+                        request.onsuccess = function(event) {
+                            const record = event.target.result;
+                            if (record) {
+                                showRecordDetails(record);
+                            }
+                        };
+                    }
+                } catch (error) {
+                    console.error("Error checking view parameter:", error);
+                }
+            }
+        }
+
         // Initialize the application
         document.addEventListener("DOMContentLoaded", async () => {
             try {
@@ -1309,6 +1365,10 @@
                 await openDB();   // Ensure the database is open
                 renderProductTable(); // Render product input fields
                 await loadRecords();  // Load saved records
+                
+                // Check if we need to show a specific record
+                checkForViewParameter();
+                
                 showSuccess("Application loaded successfully");
             } catch (error) {
                 console.error("Initialization error:", error);
