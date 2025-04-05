@@ -11,6 +11,7 @@
             font-size: 16px;
         }
 
+
         input, button {
             margin: 5px 0;
             padding: 10px;
@@ -19,11 +20,13 @@
             font-size: 16px;
         }
 
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
+
 
         th, td {
             border: 1px solid #ccc;
@@ -32,9 +35,11 @@
             font-size: 14px;
         }
 
+
         th {
             background-color: #f4f4f4;
         }
+
 
         .scrollable {
             max-height: 300px;
@@ -42,16 +47,19 @@
             display: block;
         }
 
+
         @media (max-width: 600px) {
             body {
                 margin: 5px;
                 font-size: 14px;
             }
 
+
             h1, h2, h3 {
                 font-size: 1.5em;
                 margin: 10px 0;
             }
+
 
             table {
                 display: block;
@@ -60,25 +68,30 @@
                 margin-bottom: 20px;
             }
 
+
             th, td {
                 padding: 8px;
                 font-size: 12px;
                 min-width: 120px;
             }
 
+
             input, button {
                 padding: 8px;
                 font-size: 14px;
             }
 
+
             .scrollable {
                 max-height: 200px;
             }
+
 
             button {
                 width: auto;
                 margin: 10px auto;
             }
+
 
             h3 {
                 font-size: 1.2em;
@@ -88,7 +101,9 @@
 </head>
 <body>
 
+
 <h1>Inventari</h1>
+
 
 <h2>Produktet</h2>
 <div class="scrollable">
@@ -108,8 +123,10 @@
     </table>
 </div>
 
+
 <h3>Kostoja Totale Ditore: L <span id="dailyTotal">0.00</span></h3>
 <button onclick="saveRecord()">Ruaji të dhënat</button>
+
 
 <h2>Lista e Ruajtur</h2>
 <div class="scrollable">
@@ -134,60 +151,56 @@
     </table>
 </div>
 
-<script>
-    const products = [
-        { product: "Ekmek", price: 1.5 },
-        { product: "Torte", price: 12.000 },
-        { product: "Zupa", price: 1.000 },
-        { product: "Trilece", price: 5.000 },
-        { product: "Kausha", price: 10.000 },
-        { product: "Peta", price: 1.000 },
-        { product: "Rulon", price: 10.000 },
-        { product: "Pastashu", price: 1.000 },
-        { product: "Kompeka", price: 10.000 },
-        { product: "Bakllava", price: 10.000 },
-        { product: "Torte racion", price: 1.5 },
-        { product: "Porcione", price: 12.000 },
-        { product: "Tolluma", price: 1.5 },
-        { product: "Buke franxholla", price: 12.000 },
-        { product: "Franxholla", price: 6.000 },
-        { product: "Buke me topa", price: 10.000 },
-        { product: "Buke masive", price: 1.5 },
-        { product: "Buke me fara", price: 12.000 },
-        { product: "Buke fshati", price: 10.000 },
-        { product: "Buke e rrumbullaket", price: 1.5 },
-        { product: "Buke e gjate", price: 12.000 },
-        { product: "Kulac", price: 6.000 },
-        { product: "Buke me ullinj", price: 12.000 },
-        { product: "Buke e verdhe", price: 6.000 },
-        { product: "Buke integrale", price: 10.000 },
-        { product: "Buke Bogeti", price: 1.5 },
-        { product: "Buke misri", price: 12.000 },
-        { product: "Buke thekre", price: 10.000 },
-        { product: "Pite", price: 1.5 },
-        { product: "Simite", price: 12.000 },
-        { product: "Sanduic", price: 6.000 },
-        { product: "Sanduic me fara", price: 12.000 },
-        { product: "Sanduic i verdhe", price: 6.000 },
-        { product: "Briosh", price: 10.000 },
-        { product: "Donat", price: 1.5 },
-        { product: "Byrek", price: 5.00 },
-        { product: "Pica", price: 1.5 },
-        { product: "Kos 380gr", price: 12.000 },
-        { product: "Kos bidon", price: 6.000 },
-        { product: "Kos i madh", price: 12.000 },
-        { product: "Kos 200", price: 6.000 },
-        { product: "Dhalle bidon", price: 10.000 },
-        { product: "Salce kosi 900gr", price: 10.000 },
-        { product: "Boze", price: 6.000 },
-        { product: "Uje Bukanik 7kg", price: 1.5 }
-    ];
+
+const products = [
+    { product: "Ekmek", price: 150 },
+    { product: "Simite", price: 10 },
+    { product: "Torte", price: 1200 },
+    { product: "Sanduic", price: 60 },
+    { product: "Zupa", price: 100 },
+    { product: "Sanduic me fara", price: 20 },
+    { product: "Trilece", price: 500 },
+    { product: "Briosh", price: 80 },
+    { product: "Kausha", price: 100 },
+    { product: "Donat", price: 120 },
+    { product: "Peta", price: 100 },
+    { product: "Byrek", price: 50 },
+    { product: "Rulon", price: 150 },
+    { product: "Pica", price: 100 },
+    { product: "Pastashu", price: 100 },
+    { product: "Kos bidon", price: 160 },
+    { product: "Kompeka", price: 100 },
+    { product: "Kos 200", price: 40 },
+    { product: "Torte racion", price: 150 },
+    { product: "Dhalle bidon", price: 50 },
+    { product: "Porcione", price: 180 },
+    { product: "Salce kosi 900gr", price: 260 },
+    { product: "Tolluma", price: 30 },
+    { product: "Uje Bukanik 7kg", price: 100 },
+    { product: "Franxholla", price: 60 },
+    { product: "Kos 380gr", price: 70 },
+    { product: "Buke masive", price: 100 },
+    { product: "Buke e gjate", price: 90 },
+    { product: "Kos 280", price: 60 },
+    { product: "Buke me ullinj", price: 70 },
+    { product: "Torta lakta", price: 1200 },
+    { product: "Tort pistakjo", price: 1700 },
+    { product: "Pite", price: 20 },
+    { product: "Tort oreo", price: 1500 },
+    { product: "Amareta", price: 100 },
+    { product: "Uj kristal 10 kg", price: 120 },
+    { product: "Kristal i vogel", price: 50 },
+    { product: "Bukanik 1.5", price: 50 },
+    { product: "Kola bidon", price: 160 }
+];
 
     let db;
+
 
     function openDB() {
         return new Promise((resolve, reject) => {
             const request = indexedDB.open("InventoryDB", 1);
+
 
             request.onupgradeneeded = function(event) {
                 db = event.target.result;
@@ -196,10 +209,12 @@
                 }
             };
 
+
             request.onsuccess = function(event) {
                 db = event.target.result;
                 resolve(db);
             };
+
 
             request.onerror = function() {
                 reject("Error opening DB");
@@ -207,15 +222,18 @@
         });
     }
 
+
     function saveRecordToDB(record) {
         return new Promise((resolve, reject) => {
             const transaction = db.transaction(['records'], 'readwrite');
             const store = transaction.objectStore('records');
             const request = store.add(record);
 
+
             request.onsuccess = function(event) {
                 resolve(event.target.result); // Return the new record ID
             };
+
 
             request.onerror = function() {
                 reject("Error saving record");
@@ -223,15 +241,18 @@
         });
     }
 
+
     function loadRecordsFromDB() {
         return new Promise((resolve, reject) => {
             const transaction = db.transaction(['records'], 'readonly');
             const store = transaction.objectStore('records');
             const request = store.getAll();
 
+
             request.onsuccess = function(event) {
                 resolve(event.target.result);
             };
+
 
             request.onerror = function() {
                 reject("Error loading records");
@@ -239,15 +260,18 @@
         });
     }
 
+
     function deleteRecordFromDB(id) {
         return new Promise((resolve, reject) => {
             const transaction = db.transaction(['records'], 'readwrite');
             const store = transaction.objectStore('records');
             const request = store.delete(Number(id));
 
+
             request.onsuccess = function() {
                 resolve();
             };
+
 
             request.onerror = function() {
                 reject("Error deleting record");
@@ -255,9 +279,11 @@
         });
     }
 
+
     function renderProductTable() {
         const productTable = document.getElementById("productTable");
         productTable.innerHTML = "";
+
 
         products.forEach((product, index) => {
             const row = document.createElement("tr");
@@ -272,6 +298,7 @@
             `;
             productTable.appendChild(row);
         });
+
 
         for (let i = 0; i < 10; i++) {
             const emptyRow = document.createElement("tr");
@@ -288,22 +315,28 @@
         }
     }
 
+
     function updateDailyTotal() {
         let dailyTotal = 0;
+
 
         products.forEach((product, index) => {
             const quantity = parseFloat(document.getElementById(`quantity-${index}`).value) || 0;
             const part1 = parseFloat(document.getElementById(`part1-${index}`).value) || 0;
             const part2 = parseFloat(document.getElementById(`part2-${index}`).value) || 0;
 
+
             const totalCost = quantity * product.price;
             const finalTotal = totalCost - (part1 * product.price) - (part2 * product.price);
+
 
             document.getElementById(`total-${index}`).innerText = totalCost.toFixed(2);
             document.getElementById(`finalTotal-${index}`).innerText = finalTotal.toFixed(2);
 
+
             dailyTotal += finalTotal;
         });
+
 
         for (let i = 0; i < 10; i++) {
             const price = parseFloat(document.getElementById(`price-extra-${i}`).value) || 0;
@@ -311,21 +344,27 @@
             const part1 = parseFloat(document.getElementById(`part1-extra-${i}`).value) || 0;
             const part2 = parseFloat(document.getElementById(`part2-extra-${i}`).value) || 0;
 
+
             const totalCost = price * quantity;
             const finalTotal = totalCost - (part1 * price) - (part2 * price);
+
 
             document.getElementById(`total-extra-${i}`).innerText = totalCost.toFixed(2);
             document.getElementById(`finalTotal-extra-${i}`).innerText = finalTotal.toFixed(2);
 
+
             dailyTotal += finalTotal;
         }
+
 
         document.getElementById("dailyTotal").innerText = dailyTotal.toFixed(2);
     }
 
+
     async function saveRecord() {
         let sumTotalCost = 0;
         let sumFinalTotal = 0;
+
 
         const record = {
             date: new Date().toLocaleString(),
@@ -334,11 +373,14 @@
                 const part1 = parseFloat(document.getElementById(`part1-${index}`).value) || 0;
                 const part2 = parseFloat(document.getElementById(`part2-${index}`).value) || 0;
 
+
                 const totalCost = quantity * product.price;
                 const finalTotal = totalCost - (part1 * product.price) - (part2 * product.price);
 
+
                 sumTotalCost += totalCost;
                 sumFinalTotal += finalTotal;
+
 
                 return {
                     product: product.product,
@@ -355,21 +397,26 @@
             sumOfAll: (sumTotalCost - sumFinalTotal).toFixed(2)
         };
 
+
         const recordID = await saveRecordToDB(record);
         record.id = recordID; // Assign the ID
         addRecordToTable(record);
         saveToGoogleSheets(record);
+
 
         // Reset the table to default empty state
         renderProductTable();
         document.getElementById("dailyTotal").innerText = "0.00";
     }
 
+
     function addRecordToTable(record) {
         const recordTable = document.getElementById("recordTable");
         const row = document.createElement("tr");
 
+
         row.setAttribute("data-id", record.id); // Store record ID for deletion
+
 
         const products = record.products.map(p => p.product).join(", ") || "0";
         const prices = record.products.map(p => p.price).join(", ") || "0";
@@ -378,6 +425,7 @@
         const part1s = record.products.map(p => p.part1).join(", ") || "0";
         const part2s = record.products.map(p => p.part2).join(", ") || "0";
         const finalTotals = record.products.map(p => p.finalTotal).join(", ") || "0";
+
 
         row.innerHTML = `
             <td>${record.date}</td>
@@ -399,13 +447,16 @@
         recordTable.appendChild(row);
     }
 
+
     function editRecord(button) {
         const row = button.parentElement.parentElement;
         const cells = row.getElementsByTagName("td");
 
+
         const quantities = cells[3].innerText.split(", ");
         const part1s = cells[5].innerText.split(", ");
         const part2s = cells[6].innerText.split(", ");
+
 
         products.forEach((_, index) => {
             document.getElementById(`quantity-${index}`).value = quantities[index] || 0;
@@ -413,8 +464,10 @@
             document.getElementById(`part2-${index}`).value = part2s[index] || 0;
         });
 
+
         updateDailyTotal();
     }
+
 
     async function deleteRecord(button) {
         const row = button.closest("tr");
@@ -424,27 +477,33 @@
             return;
         }
 
+
         await deleteRecordFromDB(id);
         row.remove(); // Remove the row from the UI
               // Reset the table to default empty state
               renderProductTable();
         document.getElementById("dailyTotal").innerText = "0.00";
-    
+   
     }
+
 
     async function loadRecords() {
     const records = await loadRecordsFromDB();
     const recordTable = document.getElementById("recordTable");
     recordTable.innerHTML = ""; // Clear the table before loading records
 
+
     if (records.length === 0) {
         console.log("No records found in IndexedDB.");
     }
+
 
     records.forEach(record => {
         addRecordToTable(record);
     });
 }
+
+
 
 
     function saveToGoogleSheets(record) {
@@ -461,11 +520,13 @@
         .catch(error => console.error("Error:", error));
     }
 
+
     document.addEventListener("DOMContentLoaded", async () => {
     await openDB();   // Ensure the database is open
     renderProductTable(); // Render product input fields
     await loadRecords();  // Load saved records
 });
+
 
 </script>
 </body>
