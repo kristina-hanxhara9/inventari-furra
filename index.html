@@ -4,42 +4,230 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventari</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 10px;
-            font-size: 16px;
+        :root {
+            --primary: #2E5984;
+            --primary-light: #6B8E23;
+            --secondary: #8FBC8F;
+            --secondary-light: #9ACD32;
+            --success: #4CAF50;
+            --danger: #DC3545;
+            --warning: #F0AD4E;
+            --light: #F5F5F5;
+            --dark: #444444;
+            --white: #FFFFFF;
+            --gray: #808080;
+            --gray-light: #CCCCCC;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
 
+<<<<<<< HEAD
 
         input, button {
             margin: 5px 0;
             padding: 10px;
             width: 100%;
+=======
+        * {
+            margin: 0;
+            padding: 0;
+>>>>>>> 7309062f5d71c1522a262ce227865b59e8844f7e
             box-sizing: border-box;
-            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 10px;
+        }
+
+        .container {
+            width: 100%;
+            padding: 20px;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 1.7rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary);
+            margin-top: 30px;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 15px 20px;
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        input, button, select {
+            font-family: inherit;
+            font-size: 1rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--gray-light);
+            padding: 10px 12px;
+            width: 100%;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(143, 188, 143, 0.25);
+        }
+
+        input[type="number"] {
+            text-align: center;
+        }
+
+        button {
+            cursor: pointer;
+            background-color: var(--secondary);
+            color: var(--dark);
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        button:hover {
+            background-color: var(--secondary-light);
+            transform: translateY(-2px);
+        }
+
+        button i {
+            margin-right: 8px;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #45a049;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+
+        .btn-warning:hover {
+            background-color: #ec971f;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #1e3a5e;
+        }
+
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 0.875rem;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            max-height: 450px;
+            overflow-y: auto;
         }
 
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            background-color: var(--white);
         }
 
 
         th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
+            padding: 12px 15px;
             text-align: center;
-            font-size: 14px;
+            border-bottom: 1px solid var(--gray-light);
         }
 
 
         th {
-            background-color: #f4f4f4;
+            background-color: var(--primary);
+            color: var(--white);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
+<<<<<<< HEAD
 
         .scrollable {
             max-height: 300px;
@@ -49,11 +237,269 @@
 
 
         @media (max-width: 600px) {
+=======
+        tr:nth-child(even) {
+            background-color: rgba(245, 245, 245, 0.5);
+        }
+
+        tr:hover {
+            background-color: rgba(143, 188, 143, 0.1);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #45a049;
+            border: 1px solid #45a049;
+        }
+
+        .alert-danger {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: #c82333;
+            border: 1px solid #c82333;
+        }
+
+        .total-section {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .total-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background-color: var(--success);
+            color: var(--white);
+        }
+
+        .badge-danger {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+
+        .summary-card {
+            background-color: var(--white);
+            border-left: 4px solid var(--secondary);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 15px;
+        }
+
+        .summary-title {
+            font-size: 0.875rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-light);
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        /* Modal styles for detailed record view */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            width: 80%;
+            max-width: 900px;
+            box-shadow: var(--shadow);
+            animation: modalFadeIn 0.3s;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--gray-light);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--gray);
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: var(--danger);
+        }
+
+        .record-details-table {
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .record-details-table th {
+            text-align: left;
+            background-color: var(--primary-light);
+        }
+
+        .record-summary {
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .record-summary div {
+            text-align: center;
+        }
+
+        .record-summary-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+
+        .record-summary-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        @keyframes modalFadeIn {
+            from {opacity: 0; transform: translateY(-30px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        /* Record list styles */
+        .record-item {
+            cursor: pointer;
+        }
+
+        .record-item:hover {
+            background-color: rgba(143, 188, 143, 0.2);
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark);
+            color: var(--white);
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--dark) transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Action buttons container */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons button {
+            width: auto;
+        }
+
+        @media (max-width: 768px) {
+>>>>>>> 7309062f5d71c1522a262ce227865b59e8844f7e
             body {
-                margin: 5px;
-                font-size: 14px;
+                padding: 5px;
             }
 
+<<<<<<< HEAD
 
             h1, h2, h3 {
                 font-size: 1.5em;
@@ -90,17 +536,62 @@
             button {
                 width: auto;
                 margin: 10px auto;
+=======
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+>>>>>>> 7309062f5d71c1522a262ce227865b59e8844f7e
             }
 
 
             h3 {
-                font-size: 1.2em;
+                font-size: 1.2rem;
+            }
+
+            .table-responsive {
+                max-height: 350px;
+            }
+
+            th, td {
+                padding: 10px;
+                font-size: 0.875rem;
+            }
+
+            input, button, select {
+                padding: 8px 10px;
+                font-size: 0.875rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+
+            .record-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-warehouse"></i> Inventari</h1>
+            <span id="current-date"></span>
+        </header>
 
+<<<<<<< HEAD
 
 <h1>Inventari</h1>
 
@@ -193,9 +684,73 @@ const products = [
     { product: "Bukanik 1.5", price: 50 },
     { product: "Kola bidon", price: 160 }
 ];
+=======
+        <div id="errorMessage" class="alert alert-danger"></div>
+        <div id="successMessage" class="alert alert-success"></div>
 
-    let db;
+        <!-- New Action buttons section with Permbledhje button -->
+        <div class="action-buttons">
+            <button onclick="saveRecord()" class="btn-success" id="saveButton">
+                <i class="fas fa-save"></i> Ruaji të dhënat
+            </button>
+            <button onclick="window.open('permbledhje.html', '_blank')" class="btn-primary">
+                <i class="fas fa-chart-line"></i> Permbledhjet e diteve
+            </button>
+        </div>
 
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produktet</th>
+                        <th>Cmimi (per cope)</th>
+                        <th>Sasia</th>
+                        <th>Kostoja Totale</th>
+                        <th>Turni 1</th>
+                        <th>Turni 2</th>
+                        <th>Totali Final</th>
+                    </tr>
+                </thead>
+                <tbody id="productTable"></tbody>
+            </table>
+        </div>
+
+        <div class="total-section">
+            <h3 style="margin: 0; color: white;">Kostoja Totale Ditore</h3>
+            <div class="total-value">L <span id="dailyTotal">0.00</span></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-history"></i> Lista e Ruajtur
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Produktet</th>
+                                <th>Totali i Produkteve</th>
+                                <th>Gjithsej kostoTotale</th>
+                                <th>Gjithsej Totali Final</th>
+                                <th>Xhiro ditore</th>
+                                <th>Veprimi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recordTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+>>>>>>> 7309062f5d71c1522a262ce227865b59e8844f7e
+
+        <div class="footer">
+            <p>© <span id="current-year"></span> Inventari System</p>
+        </div>
+    </div>
+
+<<<<<<< HEAD
 
     function openDB() {
         return new Promise((resolve, reject) => {
@@ -206,9 +761,119 @@ const products = [
                 db = event.target.result;
                 if (!db.objectStoreNames.contains('records')) {
                     db.createObjectStore('records', { keyPath: 'id', autoIncrement: true });
-                }
-            };
+=======
+    <!-- Modal for displaying record details -->
+    <div id="recordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Detaje të Rekordeve</h3>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+            </div>
+            <div id="recordDetails"></div>
+        </div>
+    </div>
 
+    <script>
+        const products = [
+            { product: "Ekmek", price: 1.5 },
+            { product: "Torte", price: 12.000 },
+            { product: "Zupa", price: 1.000 },
+            { product: "Trilece", price: 5.000 },
+            { product: "Kausha", price: 10.000 },
+            { product: "Peta", price: 1.000 },
+            { product: "Rulon", price: 10.000 },
+            { product: "Pastashu", price: 1.000 },
+            { product: "Kompeka", price: 10.000 },
+            { product: "Bakllava", price: 10.000 },
+            { product: "Torte racion", price: 1.5 },
+            { product: "Porcione", price: 12.000 },
+            { product: "Tolluma", price: 1.5 },
+            { product: "Buke franxholla", price: 12.000 },
+            { product: "Franxholla", price: 6.000 },
+            { product: "Buke me topa", price: 10.000 },
+            { product: "Buke masive", price: 1.5 },
+            { product: "Buke me fara", price: 12.000 },
+            { product: "Buke fshati", price: 10.000 },
+            { product: "Buke e rrumbullaket", price: 1.5 },
+            { product: "Buke e gjate", price: 12.000 },
+            { product: "Kulac", price: 6.000 },
+            { product: "Buke me ullinj", price: 12.000 },
+            { product: "Buke e verdhe", price: 6.000 },
+            { product: "Buke integrale", price: 10.000 },
+            { product: "Buke Bogeti", price: 1.5 },
+            { product: "Buke misri", price: 12.000 },
+            { product: "Buke thekre", price: 10.000 },
+            { product: "Pite", price: 1.5 },
+            { product: "Simite", price: 12.000 },
+            { product: "Sanduic", price: 6.000 },
+            { product: "Sanduic me fara", price: 12.000 },
+            { product: "Sanduic i verdhe", price: 6.000 },
+            { product: "Briosh", price: 10.000 },
+            { product: "Donat", price: 1.5 },
+            { product: "Byrek", price: 5.00 },
+            { product: "Pica", price: 1.5 },
+            { product: "Kos 380gr", price: 12.000 },
+            { product: "Kos bidon", price: 6.000 },
+            { product: "Kos i madh", price: 12.000 },
+            { product: "Kos 200", price: 6.000 },
+            { product: "Dhalle bidon", price: 10.000 },
+            { product: "Salce kosi 900gr", price: 10.000 },
+            { product: "Boze", price: 6.000 },
+            { product: "Uje Bukanik 7kg", price: 1.5 }
+        ];
+
+        let db;
+        
+        // Show error message
+        function showError(message) {
+            const errorElement = document.getElementById("errorMessage");
+            errorElement.textContent = message;
+            errorElement.style.display = "block";
+            setTimeout(() => {
+                errorElement.style.display = "none";
+            }, 5000);
+        }
+        
+        // Show success message
+        function showSuccess(message) {
+            const successElement = document.getElementById("successMessage");
+            successElement.textContent = message;
+            successElement.style.display = "block";
+            setTimeout(() => {
+                successElement.style.display = "none";
+            }, 3000);
+        }
+
+        // Open and close modal
+        function openModal() {
+            document.getElementById("recordModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("recordModal").style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            const modal = document.getElementById("recordModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        function openDB() {
+            return new Promise((resolve, reject) => {
+                // Check if IndexedDB is supported
+                if (!window.indexedDB) {
+                    showError("Your browser doesn't support IndexedDB. Please use a modern browser.");
+                    reject("IndexedDB not supported");
+                    return;
+>>>>>>> 7309062f5d71c1522a262ce227865b59e8844f7e
+                }
+                
+                const request = indexedDB.open("InventoryDB", 1);
+
+<<<<<<< HEAD
 
             request.onsuccess = function(event) {
                 db = event.target.result;
@@ -369,6 +1034,180 @@ const products = [
         const record = {
             date: new Date().toLocaleString(),
             products: products.map((product, index) => {
+=======
+                request.onupgradeneeded = function(event) {
+                    db = event.target.result;
+                    if (!db.objectStoreNames.contains('records')) {
+                        db.createObjectStore('records', { keyPath: 'id', autoIncrement: true });
+                    }
+                };
+
+                request.onsuccess = function(event) {
+                    db = event.target.result;
+                    resolve(db);
+                };
+
+                request.onerror = function(event) {
+                    showError("Error opening database: " + event.target.error);
+                    reject("Error opening DB");
+                };
+            });
+        }
+
+        function saveRecordToDB(record) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    showError("Database not initialized");
+                    reject("Database not initialized");
+                    return;
+                }
+                
+                try {
+                    const transaction = db.transaction(['records'], 'readwrite');
+                    const store = transaction.objectStore('records');
+                    const request = store.add(record);
+
+                    request.onsuccess = function(event) {
+                        resolve(event.target.result); // Return the new record ID
+                    };
+
+                    request.onerror = function(event) {
+                        showError("Error saving record: " + event.target.error);
+                        reject("Error saving record");
+                    };
+                } catch (error) {
+                    showError("Error in transaction: " + error.message);
+                    reject(error);
+                }
+            });
+        }
+
+        function updateRecordInDB(id, record) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    showError("Database not initialized");
+                    reject("Database not initialized");
+                    return;
+                }
+                
+                try {
+                    const transaction = db.transaction(['records'], 'readwrite');
+                    const store = transaction.objectStore('records');
+                    // Make sure the record has the correct ID
+                    record.id = id;
+                    const request = store.put(record); // put updates existing records or adds new ones
+
+                    request.onsuccess = function(event) {
+                        resolve();
+                    };
+
+                    request.onerror = function(event) {
+                        showError("Error updating record: " + event.target.error);
+                        reject("Error updating record");
+                    };
+                } catch (error) {
+                    showError("Error in transaction: " + error.message);
+                    reject(error);
+                }
+            });
+        }
+
+        function loadRecordsFromDB() {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    showError("Database not initialized");
+                    reject("Database not initialized");
+                    return [];
+                }
+                
+                try {
+                    const transaction = db.transaction(['records'], 'readonly');
+                    const store = transaction.objectStore('records');
+                    const request = store.getAll();
+
+                    request.onsuccess = function(event) {
+                        resolve(event.target.result);
+                    };
+
+                    request.onerror = function(event) {
+                        showError("Error loading records: " + event.target.error);
+                        reject("Error loading records");
+                    };
+                } catch (error) {
+                    showError("Error in transaction: " + error.message);
+                    reject(error);
+                    return [];
+                }
+            });
+        }
+
+        function deleteRecordFromDB(id) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    showError("Database not initialized");
+                    reject("Database not initialized");
+                    return;
+                }
+                
+                try {
+                    const transaction = db.transaction(['records'], 'readwrite');
+                    const store = transaction.objectStore('records');
+                    const request = store.delete(Number(id));
+
+                    request.onsuccess = function() {
+                        resolve();
+                    };
+
+                    request.onerror = function(event) {
+                        showError("Error deleting record: " + event.target.error);
+                        reject("Error deleting record");
+                    };
+                } catch (error) {
+                    showError("Error in transaction: " + error.message);
+                    reject(error);
+                }
+            });
+        }
+
+        function renderProductTable() {
+            const productTable = document.getElementById("productTable");
+            productTable.innerHTML = "";
+
+            products.forEach((product, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${product.product}</td>
+                    <td>${product.price.toFixed(2)}</td>
+                    <td><input type="number" id="quantity-${index}" value="" min="0" oninput="updateDailyTotal()"></td>
+                    <td id="total-${index}">0.00</td>
+                    <td><input type="number" id="part1-${index}" value="" min="0" oninput="updateDailyTotal()"></td>
+                    <td><input type="number" id="part2-${index}" value="" min="0" oninput="updateDailyTotal()"></td>
+                    <td id="finalTotal-${index}">0.00</td>
+                `;
+                productTable.appendChild(row);
+            });
+
+            for (let i = 0; i < 10; i++) {
+                const emptyRow = document.createElement("tr");
+                emptyRow.innerHTML = `
+                    <td><input type="text" id="product-extra-${i}" placeholder="Product name"></td>
+                    <td><input type="number" id="price-extra-${i}" placeholder="Price" step="0.01" min="0" oninput="updateDailyTotal()"></td>
+                    <td><input type="number" id="quantity-extra-${i}" value="" min="0" oninput="updateDailyTotal()"></td>
+                    <td id="total-extra-${i}">0.00</td>
+                    <td><input type="number" id="part1-extra-${i}" value="" min="0" oninput="updateDailyTotal()"></td>
+                    <td><input type="number" id="part2-extra-${i}" value="" min="0" oninput="updateDailyTotal()"></td>
+                    <td id="finalTotal-extra-${i}">0.00</td>
+                `;
+                productTable.appendChild(emptyRow);
+            }
+        }
+
+        function updateDailyTotal() {
+            let dailyTotal = 0;
+
+            // Calculate for predefined products
+            products.forEach((product, index) => {
+>>>>>>> 7309062f5d71c1522a262ce227865b59e8844f7e
                 const quantity = parseFloat(document.getElementById(`quantity-${index}`).value) || 0;
                 const part1 = parseFloat(document.getElementById(`part1-${index}`).value) || 0;
                 const part2 = parseFloat(document.getElementById(`part2-${index}`).value) || 0;
@@ -377,6 +1216,7 @@ const products = [
                 const totalCost = quantity * product.price;
                 const finalTotal = totalCost - (part1 * product.price) - (part2 * product.price);
 
+<<<<<<< HEAD
 
                 sumTotalCost += totalCost;
                 sumFinalTotal += finalTotal;
@@ -502,8 +1342,71 @@ const products = [
         addRecordToTable(record);
     });
 }
+=======
+                document.getElementById(`total-${index}`).innerText = totalCost.toFixed(2);
+                document.getElementById(`finalTotal-${index}`).innerText = finalTotal.toFixed(2);
 
+                dailyTotal += finalTotal;
+            });
 
+            // Calculate for custom products
+            for (let i = 0; i < 10; i++) {
+                const productName = document.getElementById(`product-extra-${i}`).value.trim();
+                const price = parseFloat(document.getElementById(`price-extra-${i}`).value) || 0;
+                const quantity = parseFloat(document.getElementById(`quantity-extra-${i}`).value) || 0;
+                const part1 = parseFloat(document.getElementById(`part1-extra-${i}`).value) || 0;
+                const part2 = parseFloat(document.getElementById(`part2-extra-${i}`).value) || 0;
+
+                if (price > 0 && quantity > 0) {
+                    const totalCost = price * quantity;
+                    const finalTotal = totalCost - (part1 * price) - (part2 * price);
+
+                    document.getElementById(`total-extra-${i}`).innerText = totalCost.toFixed(2);
+                    document.getElementById(`finalTotal-extra-${i}`).innerText = finalTotal.toFixed(2);
+
+                    dailyTotal += finalTotal;
+                } else {
+                    document.getElementById(`total-extra-${i}`).innerText = "0.00";
+                    document.getElementById(`finalTotal-extra-${i}`).innerText = "0.00";
+                }
+            }
+
+            document.getElementById("dailyTotal").innerText = dailyTotal.toFixed(2);
+        }
+
+        async function saveRecord() {
+            try {
+                let sumTotalCost = 0;
+                let sumFinalTotal = 0;
+                let allProducts = [];
+                
+                // Check if we're editing an existing record
+                const editingId = document.body.getAttribute("data-editing-id");
+                const isEdit = !!editingId;
+
+                // Update button text based on edit mode
+                const saveButton = document.getElementById("saveButton");
+                if (isEdit) {
+                    saveButton.innerHTML = '<i class="fas fa-save"></i> Update Record';
+                } else {
+                    saveButton.innerHTML = '<i class="fas fa-save"></i> Ruaji të dhënat';
+                }
+
+                // Process predefined products
+                products.forEach((product, index) => {
+                    const quantity = parseFloat(document.getElementById(`quantity-${index}`).value) || 0;
+                    if (quantity > 0) {
+                        const part1 = parseFloat(document.getElementById(`part1-${index}`).value) || 0;
+                        const part2 = parseFloat(document.getElementById(`part2-${index}`).value) || 0;
+
+                        const totalCost = quantity * product.price;
+                        const finalTotal = totalCost - (part1 * product.price) - (part2 * product.price);
+>>>>>>> 7309062f5d71c1522a262ce227865b59e8844f7e
+
+                        sumTotalCost += totalCost;
+                        sumFinalTotal += finalTotal;
+
+<<<<<<< HEAD
 
 
     function saveToGoogleSheets(record) {
@@ -513,13 +1416,106 @@ const products = [
             body: JSON.stringify(record),
             headers: {
                 "Content-Type": "application/json"
-            }
-        })
-        .then(response => response.json())
-        .then(data => console.log("Saved:", data))
-        .catch(error => console.error("Error:", error));
-    }
+=======
+                        allProducts.push({
+                            product: product.product,
+                            price: product.price,
+                            quantity: quantity,
+                            part1: part1,
+                            part2: part2,
+                            totalCost: totalCost.toFixed(2),
+                            finalTotal: finalTotal.toFixed(2)
+                        });
+                    }
+                });
 
+                // Process custom products
+                for (let i = 0; i < 10; i++) {
+                    const productName = document.getElementById(`product-extra-${i}`).value.trim();
+                    const price = parseFloat(document.getElementById(`price-extra-${i}`).value) || 0;
+                    const quantity = parseFloat(document.getElementById(`quantity-extra-${i}`).value) || 0;
+                    
+                    if (productName && price > 0 && quantity > 0) {
+                        const part1 = parseFloat(document.getElementById(`part1-extra-${i}`).value) || 0;
+                        const part2 = parseFloat(document.getElementById(`part2-extra-${i}`).value) || 0;
+
+                        const totalCost = price * quantity;
+                        const finalTotal = totalCost - (part1 * price) - (part2 * price);
+
+                        sumTotalCost += totalCost;
+                        sumFinalTotal += finalTotal;
+
+                        allProducts.push({
+                            product: productName,
+                            price: price,
+                            quantity: quantity,
+                            part1: part1,
+                            part2: part2,
+                            totalCost: totalCost.toFixed(2),
+                            finalTotal: finalTotal.toFixed(2)
+                        });
+                    }
+                }
+
+                // Check if there are products to save
+                if (allProducts.length === 0) {
+                    showError("No products to save. Please add quantities.");
+                    return;
+                }
+
+                const record = {
+                    date: new Date().toLocaleString(),
+                    products: allProducts,
+                    sumTotalCost: sumTotalCost.toFixed(2),
+                    sumFinalTotal: sumFinalTotal.toFixed(2),
+                    sumOfAll: (sumTotalCost - sumFinalTotal).toFixed(2),
+                    isEdit: isEdit
+                };
+
+                let recordID;
+                
+                if (isEdit) {
+                    // Update the existing record in IndexedDB
+                    record.id = parseInt(editingId);
+                    await updateRecordInDB(parseInt(editingId), record);
+                    recordID = parseInt(editingId);
+                    
+                    // Update UI - remove the old row
+                    const row = document.querySelector(`tr[data-id="${editingId}"]`);
+                    if (row) row.remove();
+                } else {
+                    // Create a new record in IndexedDB
+                    recordID = await saveRecordToDB(record);
+                    record.id = recordID;
+                }
+                
+                // Add the record to the table
+                addRecordToTable(record);
+                
+                // Try to save to Google Sheets, but don't block the local save if it fails
+                try {
+                    await saveToGoogleSheets(record);
+                    showSuccess(isEdit ? "Record updated successfully locally and in Google Sheets!" : "Record saved successfully locally and to Google Sheets!");
+                } catch (error) {
+                    console.error("Google Sheets error:", error);
+                    showSuccess(isEdit ? "Record updated locally, but Google Sheets sync failed." : "Record saved locally, but Google Sheets sync failed.");
+                }
+
+                // Reset the table to default empty state
+                renderProductTable();
+                document.getElementById("dailyTotal").innerText = "0.00";
+                
+                // Clear editing state
+                document.body.removeAttribute("data-editing-id");
+                saveButton.innerHTML = '<i class="fas fa-save"></i> Ruaji të dhënat';
+            } catch (error) {
+                console.error("Save error:", error);
+                showError("Error saving record: " + error.message);
+>>>>>>> 7309062f5d71c1522a262ce227865b59e8844f7e
+            }
+        }
+
+<<<<<<< HEAD
 
     document.addEventListener("DOMContentLoaded", async () => {
     await openDB();   // Ensure the database is open
@@ -529,5 +1525,343 @@ const products = [
 
 
 </script>
+=======
+        function addRecordToTable(record) {
+            const recordTable = document.getElementById("recordTable");
+            const row = document.createElement("tr");
+            row.setAttribute("data-id", record.id);
+            row.className = "record-item";
+            row.onclick = function() { showRecordDetails(record); };
+
+            // Count products
+            const productCount = record.products.length;
+            
+            // Limit display length for readability
+            const displayProductNames = record.products.map(p => p.product).join(", ");
+            const productText = displayProductNames.length > 30 
+                ? displayProductNames.substring(0, 30) + "..." 
+                : displayProductNames;
+
+            row.innerHTML = `
+                <td>${record.date}</td>
+                <td title="${displayProductNames}">${productText} 
+                    <span class="badge badge-success">${productCount} produktet</span>
+                </td>
+                <td>${record.products.reduce((total, product) => total + parseFloat(product.quantity), 0).toFixed(0)} cope</td>
+                <td>${record.sumTotalCost} L</td>
+                <td>${record.sumFinalTotal} L</td>
+                <td>${record.sumOfAll} L</td>
+                <td class="table-actions">
+                    <button onclick="editRecord(event, this)" class="btn-warning btn-sm" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="deleteRecord(event, this)" class="btn-danger btn-sm" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button onclick="showRecordDetails(${JSON.stringify(record).replace(/"/g, '&quot;')}, event)" class="btn-sm" title="Details">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </td>
+            `;
+            recordTable.prepend(row); // Add most recent records at the top
+        }
+
+        function showRecordDetails(record, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            const detailsContainer = document.getElementById("recordDetails");
+            
+            // Format date nicely
+            const recordDate = new Date(record.date);
+            const formattedDate = recordDate instanceof Date && !isNaN(recordDate) 
+                ? recordDate.toLocaleDateString() + ' ' + recordDate.toLocaleTimeString() 
+                : record.date;
+            
+            // Create content for the modal
+            let content = `
+                <div class="record-summary">
+                    <div>
+                        <div class="record-summary-label">Gjithsej kostoTotale</div>
+                        <div class="record-summary-value">${record.sumTotalCost} L</div>
+                    </div>
+                    <div>
+                        <div class="record-summary-label">Gjithsej Totali Final</div>
+                        <div class="record-summary-value">${record.sumFinalTotal} L</div>
+                    </div>
+                    <div>
+                        <div class="record-summary-label">Xhiro ditore</div>
+                        <div class="record-summary-value">${record.sumOfAll} L</div>
+                    </div>
+                </div>
+                <h4 style="margin-top: 20px;">Detajet e Produkteve</h4>
+                <div class="table-responsive">
+                    <table class="record-details-table">
+                        <thead>
+                            <tr>
+                                <th>Produktet</th>
+                                <th>Cmimi</th>
+                                <th>Sasia</th>
+                                <th>Kostoja Totale</th>
+                                <th>Turni 1</th>
+                                <th>Turni 2</th>
+                                <th>Totali Final</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            // Add each product
+            record.products.forEach(product => {
+                content += `
+                    <tr>
+                        <td>${product.product}</td>
+                        <td>${parseFloat(product.price).toFixed(2)} L</td>
+                        <td>${product.quantity}</td>
+                        <td>${product.totalCost} L</td>
+                        <td>${product.part1}</td>
+                        <td>${product.part2}</td>
+                        <td>${product.finalTotal} L</td>
+                    </tr>
+                `;
+            });
+            
+            content += `
+                        </tbody>
+                    </table>
+                </div>
+                <p style="margin-top: 15px; color: var(--gray);">Record ID: ${record.id} | Recorded on: ${formattedDate}</p>
+            `;
+            
+            detailsContainer.innerHTML = content;
+            openModal();
+        }
+
+        function editRecord(event, button) {
+            event.stopPropagation(); // Prevent triggering the row's onclick
+            
+            try {
+                const row = button.closest("tr");
+                const id = row.getAttribute("data-id");
+                
+                if (!id) {
+                    showError("Record ID not found.");
+                    return;
+                }
+                
+                // Get the full record from DB to edit
+                const transaction = db.transaction(['records'], 'readonly');
+                const store = transaction.objectStore('records');
+                const request = store.get(Number(id));
+                
+                request.onsuccess = function(event) {
+                    const record = event.target.result;
+                    
+                    if (!record) {
+                        showError("Record not found.");
+                        return;
+                    }
+                    
+                    // Clear current inputs
+                    renderProductTable();
+                    
+                    // Populate standard products
+                    record.products.forEach(productData => {
+                        const productName = productData.product;
+                        const productIndex = products.findIndex(p => p.product === productName);
+                        
+                        if (productIndex !== -1) {
+                            // This is a standard product
+                            document.getElementById(`quantity-${productIndex}`).value = productData.quantity || '';
+                            document.getElementById(`part1-${productIndex}`).value = productData.part1 || '';
+                            document.getElementById(`part2-${productIndex}`).value = productData.part2 || '';
+                        } else {
+                            // Find an empty custom product slot
+                            for (let i = 0; i < 10; i++) {
+                                const currentProduct = document.getElementById(`product-extra-${i}`).value;
+                                if (!currentProduct) {
+                                    document.getElementById(`product-extra-${i}`).value = productName;
+                                    document.getElementById(`price-extra-${i}`).value = productData.price || '';
+                                    document.getElementById(`quantity-extra-${i}`).value = productData.quantity || '';
+                                    document.getElementById(`part1-extra-${i}`).value = productData.part1 || '';
+                                    document.getElementById(`part2-extra-${i}`).value = productData.part2 || '';
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                    
+                    // Update calculations
+                    updateDailyTotal();
+                    
+                    // Store record ID to later update it instead of creating a new one
+                    document.body.setAttribute("data-editing-id", id);
+                    
+                    // Update button text to indicate edit mode
+                    document.getElementById("saveButton").innerHTML = '<i class="fas fa-save"></i> Update Record';
+                    
+                    // Scroll to the top of the page to edit
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                    
+                    showSuccess("Record loaded for editing");
+                };
+                
+                request.onerror = function(event) {
+                    showError("Error loading record: " + event.target.error);
+                };
+                
+            } catch (error) {
+                console.error("Edit error:", error);
+                showError("Error editing record: " + error.message);
+            }
+        }
+
+        async function deleteRecord(event, button) {
+            event.stopPropagation(); // Prevent triggering the row's onclick
+            
+            try {
+                const row = button.closest("tr");
+                const id = row.getAttribute("data-id"); 
+                
+                if (!id) {
+                    showError("Record ID not found.");
+                    return;
+                }
+
+                // Ask for confirmation
+                if (!confirm("Are you sure you want to delete this record?")) {
+                    return;
+                }
+
+                // Delete from local DB
+                await deleteRecordFromDB(id);
+                
+                // Try to delete from Google Sheets by sending a delete flag
+                try {
+                    await saveToGoogleSheets({
+                        id: id,
+                        isDelete: true,
+                        date: new Date().toLocaleString() // Include date for logging purposes
+                    });
+                } catch (error) {
+                    console.error("Google Sheets delete error:", error);
+                    // Continue with UI update even if Google Sheets delete fails
+                }
+                
+                // Remove from UI
+                row.remove();
+                showSuccess("Record deleted successfully");
+            } catch (error) {
+                console.error("Delete error:", error);
+                showError("Error deleting record: " + error.message);
+            }
+        }
+
+        async function loadRecords() {
+            try {
+                const records = await loadRecordsFromDB();
+                const recordTable = document.getElementById("recordTable");
+                recordTable.innerHTML = ""; // Clear the table before loading records
+
+                if (records.length === 0) {
+                    console.log("No records found in IndexedDB.");
+                }
+
+                // Sort records by date (newest first)
+                records.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                records.forEach(record => {
+                    addRecordToTable(record);
+                });
+            } catch (error) {
+                console.error("Load records error:", error);
+                showError("Error loading records: " + error.message);
+            }
+        }
+
+        function saveToGoogleSheets(record) {
+            return new Promise((resolve, reject) => {
+                fetch("https://script.google.com/macros/s/AKfycbyswxH2GJvLF0R1Jat-qVS3JTGRx6dWqfZk2lafh7F86knNgntZc_ILKawTdbK0HllE/exec", {
+                    method: "POST",
+                    mode: "no-cors",
+                    body: JSON.stringify(record),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(response => {
+                    // With no-cors, we can't read the response
+                    // Just assume it worked if no error was thrown
+                    resolve("Success");
+                })
+                .catch(error => {
+                    console.error("Google Sheets Error:", error);
+                    reject(error);
+                });
+            });
+        }
+
+        // Update current date and year in UI
+        function updateDateTime() {
+            const now = new Date();
+            
+            // Update current date in header
+            document.getElementById("current-date").textContent = now.toLocaleDateString(undefined, {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            // Update year in footer
+            document.getElementById("current-year").textContent = now.getFullYear();
+        }
+
+        // Check if we need to show a specific record (coming from permbledhje page)
+        function checkForViewParameter() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const viewId = urlParams.get('view');
+            
+            if (viewId) {
+                try {
+                    const id = parseInt(viewId);
+                    if (!isNaN(id)) {
+                        const transaction = db.transaction(['records'], 'readonly');
+                        const store = transaction.objectStore('records');
+                        const request = store.get(id);
+                        
+                        request.onsuccess = function(event) {
+                            const record = event.target.result;
+                            if (record) {
+                                showRecordDetails(record);
+                            }
+                        };
+                    }
+                } catch (error) {
+                    console.error("Error checking view parameter:", error);
+                }
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener("DOMContentLoaded", async () => {
+            try {
+                updateDateTime(); // Set date and time in UI
+                await openDB();   // Ensure the database is open
+                renderProductTable(); // Render product input fields
+                await loadRecords();  // Load saved records
+                
+                // Check if we need to show a specific record
+                checkForViewParameter();
+                
+                showSuccess("Application loaded successfully");
+            } catch (error) {
+                console.error("Initialization error:", error);
+                showError("Failed to initialize the application: " + error.message);
+            }
+        });
+    </script>
+>>>>>>> 7309062f5d71c1522a262ce227865b59e8844f7e
 </body>
 </html>
